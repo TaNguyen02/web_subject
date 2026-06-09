@@ -3,45 +3,97 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TanGuyen02</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+<title>TanGuyen02 - Ngôi Nhà Chung</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐱</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
-<script type="module" src="https://unpkg.com/@splinetool/viewer@1.12.97/build/spline-viewer.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#050505;--s1:#0D1225;--s2:#111830;
+  /* Đã làm sáng màu nền: Từ đen tuyền sang Xanh Navy đậm, sang trọng hơn */
+  --bg:#111526; 
+  --s1:#1A1F35;--s2:#232A45;
   --p:#8B5CF6;--pl:#A78BFA;--pd:rgba(139,92,246,.15);--pb:rgba(139,92,246,.25);
   --amber:#F59E0B;--al:#FCD34D;--ad:rgba(245,158,11,.15);
   --rose:#EC4899;--rd:rgba(236,72,153,.15);
   --em:#10B981;--ed:rgba(16,185,129,.15);
-  --txt:#E2E8F0;--tm:#8B96A8;--td:#475569;
-  --bdr:rgba(139,92,246,.2);--bdrh:rgba(139,92,246,.5);
+  --txt:#E2E8F0;--tm:#94A3B8;--td:#64748B;
+  --bdr:rgba(255,255,255,0.08);--bdrh:rgba(139,92,246,.5);
   --r:16px;--rl:24px;
-  --sh:0 16px 60px rgba(0,0,0,.8);
-  --gp:0 0 32px rgba(139,92,246,.3);
+  --sh:0 16px 60px rgba(0,0,0,.6);
+  --gp:0 0 32px rgba(139,92,246,.25);
   --tr:all .3s cubic-bezier(.34,1.56,.64,1);
 }
 html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:'Outfit',system-ui,sans-serif;color:var(--txt);-webkit-font-smoothing:antialiased}
-spline-viewer{position:fixed;inset:0;z-index:0;width:100%;height:100%}
-header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:20px 44px;background:linear-gradient(to bottom,rgba(5,5,5,.9) 0%,transparent 100%);pointer-events:auto}
+
+/* === CAT BACKGROUND (REDESIGNED CUTE TUXEDO CAT) === */
+#cat-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; display: flex; align-items: center; justify-content: center; opacity: 0.25; transition: opacity 0.5s; }
+#cat-bg.on { opacity: 0.4; }
+.cat { position: relative; width: 280px; height: 240px; }
+
+/* Face & Tuxedo white patch */
+.cat-face { position: absolute; inset: 0; background: #1a1a1a; border-radius: 45% 45% 40% 40% / 55% 55% 45% 45%; overflow: hidden; box-shadow: inset 0 -10px 20px rgba(0,0,0,0.8); }
+.cat-tuxedo { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 130px; height: 95px; background: #f8fafc; border-radius: 50% 50% 0 0; }
+
+/* Triangular Ears using clip-path */
+.ear { position: absolute; top: -25px; width: 75px; height: 85px; background: #1a1a1a; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); z-index: -1; }
+.ear.left { left: 15px; transform: rotate(-25deg); }
+.ear.right { right: 15px; transform: rotate(25deg); }
+.ear-inner { position: absolute; inset: 15px 15px 0 15px; background: #fbcfe8; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
+
+/* Slanted Cat Eyes */
+.eye-wrap { position: absolute; top: 80px; display: flex; gap: 45px; left: 50%; transform: translateX(-50%); }
+.eye { position: relative; width: 55px; height: 55px; background: #fde047; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; border: 3px solid #000; overflow: hidden; transition: transform 0.15s ease-out; box-shadow: inset 0 4px 10px rgba(217, 119, 6, 0.6); }
+.pupil { position: absolute; width: 10px; height: 38px; background: #000; border-radius: 50%; left: 50%; top: 50%; transform: translate(-50%, -50%); transition: all 0.05s ease-out; }
+.pupil::after { content:''; position: absolute; top: 6px; left: 2px; width: 4px; height: 10px; background: #fff; border-radius: 50%; }
+
+/* Teasing expression */
+.cat.teasing .eye { transform: scaleY(0.15) translateY(40px); background: #fff; }
+
+/* Whiskers */
+.whiskers { position: absolute; top: 135px; width: 100%; display: flex; justify-content: space-between; padding: 0 10px; pointer-events: none; }
+.whisker-l, .whisker-r { position: relative; width: 65px; height: 2px; background: rgba(255,255,255,0.25); border-radius: 2px; }
+.whisker-l::before, .whisker-l::after, .whisker-r::before, .whisker-r::after { content: ''; position: absolute; width: 65px; height: 2px; background: rgba(255,255,255,0.25); left: 0; border-radius: 2px;}
+.whisker-l { transform: rotate(10deg); left: -15px; }
+.whisker-l::before { top: -15px; transform: rotate(10deg); }
+.whisker-l::after { top: 15px; transform: rotate(-10deg); }
+.whisker-r { transform: rotate(-10deg); right: -15px; }
+.whisker-r::before { top: -15px; transform: rotate(-10deg); }
+.whisker-r::after { top: 15px; transform: rotate(10deg); }
+
+/* Nose, Mouth, Tongue */
+.nose-mouth { position: absolute; top: 145px; left: 50%; transform: translateX(-50%); z-index: 2; display: flex; flex-direction: column; align-items: center; }
+.nose { width: 18px; height: 12px; background: #f472b6; border-radius: 50% 50% 45% 45%; margin-bottom: 3px; box-shadow: inset 0 -2px 5px rgba(0,0,0,0.2); }
+.mouth-wrap { display: flex; justify-content: center; position: relative; }
+.mouth-l, .mouth-r { width: 20px; height: 12px; border-bottom: 3px solid #1a1a1a; border-radius: 0 0 15px 15px; transition: var(--tr); }
+.mouth-l { border-right: 3px solid #1a1a1a; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; transform: rotate(15deg); }
+.mouth-r { border-left: 3px solid #1a1a1a; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; transform: rotate(-15deg); margin-left:-2px;}
+
+.tongue { position: absolute; top: 11px; width: 22px; height: 0; background: #fb7185; border-radius: 0 0 11px 11px; left: 50%; transform: translateX(-50%); transition: height 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 1; box-shadow: inset 0 -2px 5px rgba(0,0,0,0.2); }
+.tongue::after { content:''; position: absolute; top: 0; left: 10px; bottom: 4px; width: 2px; background: rgba(0,0,0,0.1); }
+.cat.teasing .tongue { height: 30px; }
+.cat.teasing .mouth-l, .cat.teasing .mouth-r { border-color: transparent; }
+
+/* === HEADER, LOGO, AUTH === */
+header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:20px 44px;background:linear-gradient(to bottom,rgba(17,21,38,.9) 0%,transparent 100%);pointer-events:auto}
 .logo{display:flex;align-items:center;gap:12px}
 .logo-gem{width:34px;height:34px;background:linear-gradient(135deg,var(--p),var(--rose));border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(236,72,153,.4)}
 .logo-gem svg{width:18px;height:18px;color:#fff}
 #auth-area{pointer-events:auto}
 .btn-si{display:flex;align-items:center;gap:8px;padding:10px 24px;background:var(--pd);border:1px solid var(--bdrh);border-radius:40px;color:var(--pl);font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:var(--tr);backdrop-filter:blur(16px)}
 .btn-si:hover{background:var(--pb);box-shadow:var(--gp);transform:translateY(-2px)}
-.user-pill{display:flex;align-items:center;gap:12px;padding:6px 16px 6px 6px;background:var(--pd);border:1px solid var(--bdr);border-radius:40px;cursor:default;backdrop-filter:blur(16px)}
-.user-pill:hover{border-color:var(--bdrh)}
-.avi{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--rose));display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:#fff;flex-shrink:0}
-.u-name{font-size:.85rem;font-weight:500;color:var(--txt)}
-.btn-so{padding:5px 14px;background:transparent;border:1px solid var(--bdr);border-radius:20px;color:var(--tm);font-size:.75rem;font-family:'Outfit',sans-serif;cursor:pointer;transition:var(--tr)}
-.btn-so:hover{border-color:var(--rose);color:var(--rose)}
+.user-pill{display:flex;align-items:center;gap:12px;padding:6px 16px 6px 6px;background:var(--pd);border:1px solid var(--bdr);border-radius:40px;cursor:pointer;backdrop-filter:blur(16px);transition:var(--tr)}
+.user-pill:hover{border-color:var(--bdrh);background:var(--pb)}
+.avi{width:32px;height:32px;border-radius:50%;background:var(--p);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:#fff;flex-shrink:0;box-shadow: 0 2px 6px rgba(0,0,0,0.3)}
+.u-name-status{display:flex;flex-direction:column}
+.u-name{font-size:.85rem;font-weight:600;color:var(--txt)}
+.u-status{font-size:.7rem;color:var(--tm);max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.btn-so{padding:5px 12px;background:rgba(236,72,153,0.1);border:1px solid rgba(236,72,153,0.3);border-radius:20px;color:var(--rose);font-size:.72rem;font-family:'Outfit',sans-serif;cursor:pointer;transition:var(--tr);margin-left:8px}
+.btn-so:hover{background:var(--rd);border-color:var(--rose);transform:scale(1.05)}
 
 /* === ORBIT CARDS === */
 #orbit-container{position:fixed;inset:0;z-index:20;pointer-events:none;display:grid;grid-template-columns:minmax(200px,1fr) minmax(300px,600px) minmax(200px,1fr);grid-template-rows:1fr;padding:100px 40px 60px}
@@ -49,204 +101,218 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:c
 .left-sidebar{grid-column:1;align-items:start}
 .right-sidebar{grid-column:3;align-items:end}
 .cw{pointer-events:auto;width:100%;max-width:240px}
-.orbit-card{width:100%;padding:16px 20px;background:rgba(15,20,35,.5);border:1px solid rgba(255,255,255,.1);border-radius:var(--rl);backdrop-filter:blur(16px);cursor:pointer;display:flex;align-items:center;gap:16px;transition:var(--tr);user-select:none;position:relative;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.4)}
-.orbit-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.05) 0%,transparent 100%);pointer-events:none}
-.orbit-card:hover{border-color:var(--pl);box-shadow:var(--gp),var(--sh);transform:translateY(-4px);background:rgba(139,92,246,.15)}
+.orbit-card{width:100%;padding:16px 20px;background:rgba(26,31,53,0.6);border:1px solid rgba(255,255,255,0.08);border-radius:var(--rl);backdrop-filter:blur(16px);cursor:pointer;display:flex;align-items:center;gap:16px;transition:var(--tr);user-select:none;position:relative;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.3)}
+.orbit-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.03) 0%,transparent 100%);pointer-events:none}
+.orbit-card:hover{border-color:var(--pl);box-shadow:var(--gp),var(--sh);transform:translateY(-4px);background:rgba(139,92,246,0.1)}
 .orbit-card:active{transform:scale(.96)}
 .ci-wrap{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .ci-polls{background:var(--rd);color:var(--rose)}
 .ci-tales{background:var(--pd);color:var(--pl)}
 .ci-cal{background:var(--ed);color:var(--em)}
-.ci-gallery{background:var(--rd);color:var(--rose)}
+.ci-gallery{background:rgba(245,158,11,0.15);color:var(--amber)}
 .ci-vis{background:var(--ad);color:var(--amber)}
-.ci-profile{background:rgba(255,255,255,.06);color:var(--tm)}
+.ci-profile{background:rgba(255,255,255,0.06);color:var(--tm)}
 .ci-wrap svg{width:22px;height:22px}
 .card-text{display:flex;flex-direction:column;text-align:left}
 .c-title{font-size:.95rem;font-weight:600;color:var(--txt);margin-bottom:2px}
 .c-desc{font-size:.7rem;color:var(--tm);font-weight:400}
 
 /* === OVERLAY & MODALS === */
-#ov{position:fixed;inset:0;z-index:200;background:rgba(5,5,5,.87);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;pointer-events:auto}
+#ov{position:fixed;inset:0;z-index:200;background:rgba(10,13,25,0.85);backdrop-filter:blur(16px);display:none;align-items:center;justify-content:center;pointer-events:auto}
 #ov.on{display:flex;animation:fi .2s ease}
 @keyframes fi{from{opacity:0}to{opacity:1}}
-.modal{display:none;flex-direction:column;background:linear-gradient(155deg,#0f111a,#130c1f);border:1px solid var(--bdr);border-radius:26px;width:min(660px,92vw);max-height:88vh;overflow:hidden;box-shadow:0 24px 90px rgba(0,0,0,.9),var(--gp);position:relative}
+.modal{display:none;flex-direction:column;background:linear-gradient(155deg,#161a2b,#111422);border:1px solid var(--bdr);border-radius:26px;width:min(660px,92vw);max-height:88vh;overflow:hidden;box-shadow:0 24px 90px rgba(0,0,0,0.7),var(--gp);position:relative}
 .modal::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--pl),transparent);z-index:1}
 .modal.on{display:flex;animation:su .3s cubic-bezier(.34,1.56,.64,1)}
 @keyframes su{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
-.mh{padding:26px 30px 22px;border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:12px}
+.mh{padding:26px 30px 22px;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:12px}
 .mt{font-family:'DM Serif Display',serif;font-size:1.4rem;color:var(--txt)}
 .mha{display:flex;align-items:center;gap:10px}
-.mbtn-x{width:34px;height:34px;border:1px solid rgba(255,255,255,.1);border-radius:50%;background:rgba(255,255,255,.03);color:var(--tm);font-size:.92rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--tr);flex-shrink:0}
+.mbtn-x{width:34px;height:34px;border:1px solid rgba(255,255,255,0.1);border-radius:50%;background:rgba(255,255,255,0.03);color:var(--tm);font-size:.92rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--tr);flex-shrink:0}
 .mbtn-x:hover{border-color:var(--rose);color:var(--rose);transform:rotate(90deg);background:var(--rd)}
 .mb{flex:1;overflow-y:auto;padding:26px 30px}
 .mb::-webkit-scrollbar{width:5px}
-.mb::-webkit-scrollbar-track{background:transparent}
-.mb::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:4px}
+.mb::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:4px}
 
-/* === FORMS === */
+/* === FORMS, BUTTONS === */
 .fg{margin-bottom:16px}
 .fl{display:block;font-size:.72rem;font-weight:600;color:var(--tm);margin-bottom:7px;letter-spacing:.08em;text-transform:uppercase}
-.fi,.fta{width:100%;padding:11px 15px;background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.1);border-radius:12px;color:var(--txt);font-family:'Outfit',sans-serif;font-size:.9rem;transition:var(--tr);outline:none;resize:none}
-.fi:focus,.fta:focus{border-color:var(--pl);background:rgba(139,92,246,.05);box-shadow:0 0 0 3px rgba(139,92,246,.15)}
+.fi,.fta{width:100%;padding:11px 15px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08);border-radius:12px;color:var(--txt);font-family:'Outfit',sans-serif;font-size:.9rem;transition:var(--tr);outline:none;resize:none}
+.fi:focus,.fta:focus{border-color:var(--pl);background:rgba(139,92,246,0.05);box-shadow:0 0 0 3px rgba(139,92,246,0.15)}
 .fta{min-height:90px}
 .btn-p{width:100%;padding:13px;background:linear-gradient(135deg,var(--p),#6d28d9);border:none;border-radius:13px;color:#fff;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;transition:var(--tr);margin-top:4px}
-.btn-p:hover{box-shadow:0 6px 24px rgba(139,92,246,.4);transform:translateY(-2px);filter:brightness(1.1)}
+.btn-p:hover{box-shadow:0 6px 24px rgba(139,92,246,0.4);transform:translateY(-2px);filter:brightness(1.1)}
 .btn-s{padding:9px 20px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.12);border-radius:11px;color:var(--pl);font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:500;cursor:pointer;transition:var(--tr)}
 .btn-s:hover{background:var(--pd);border-color:var(--pl);transform:translateY(-1px)}
-.atabs{display:flex;gap:4px;background:rgba(0,0,0,.3);border-radius:12px;padding:4px;margin-bottom:24px}
+.atabs{display:flex;gap:4px;background:rgba(0,0,0,0.3);border-radius:12px;padding:4px;margin-bottom:24px}
 .atab{flex:1;padding:10px;border:none;background:transparent;border-radius:10px;color:var(--tm);font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:500;cursor:pointer;transition:var(--tr)}
-.atab.on{background:var(--pd);color:var(--pl);border:1px solid rgba(139,92,246,.3)}
-.gbtn{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;padding:13px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:13px;color:var(--txt);font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:500;cursor:pointer;transition:var(--tr);margin-bottom:22px}
-.gbtn:hover{background:rgba(255,255,255,.1);transform:translateY(-2px)}
-.gdiv{display:flex;align-items:center;gap:14px;margin-bottom:22px;color:var(--td);font-size:.75rem;text-transform:uppercase;letter-spacing:.1em}
-.gdiv::before,.gdiv::after{flex:1;content:'';height:1px;background:rgba(255,255,255,.1)}
-.err{padding:10px 14px;border-radius:10px;font-size:.81rem;margin-bottom:14px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#FCA5A5;display:none}
+.atab.on{background:var(--pd);color:var(--pl);border:1px solid rgba(139,92,246,0.3)}
+.err{padding:10px 14px;border-radius:10px;font-size:.81rem;margin-bottom:14px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#FCA5A5;display:none}
 .err.on{display:block}
 .hint{font-size:.8rem;color:var(--tm);text-align:center;margin-top:16px}
 .hint a{color:var(--pl);cursor:pointer;text-decoration:none}
-.hint a:hover{text-decoration:underline}
-.tag{padding:4px 12px;background:var(--pd);border:1px solid rgba(139,92,246,.2);border-radius:20px;font-size:.7rem;color:var(--pl);font-weight:500}
 .info-banner{background:var(--pd);border:1px solid var(--bdr);border-radius:12px;padding:14px 18px;font-size:.85rem;color:var(--pl);margin-bottom:20px;text-align:center}
-.info-banner a{color:#fff;cursor:pointer;font-weight:600}
 .post-box{background:rgba(0,0,0,.2);border:1px dashed rgba(255,255,255,.15);border-radius:14px;padding:20px;margin-bottom:24px}
 .post-box-title{font-size:.9rem;font-weight:600;color:var(--txt);margin-bottom:16px;display:flex;align-items:center;gap:8px}
-/* Stories */
-.story-card{background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.05);border-radius:16px;padding:22px;margin-bottom:14px;transition:var(--tr);cursor:pointer}
-.story-card:hover{border-color:var(--bdr);background:rgba(139,92,246,.05);transform:translateX(4px)}
-.sc-title{font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--txt);margin-bottom:10px}
-.sc-excerpt{font-size:.85rem;color:var(--tm);line-height:1.6;margin-bottom:14px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.sc-meta{display:flex;align-items:center;justify-content:space-between;font-size:.78rem;color:var(--tm)}
-.sc-author{display:flex;align-items:center;gap:8px}
-.sc-avi{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--rose));display:flex;align-items:center;justify-content:center;font-size:.6rem;color:#fff;font-weight:700}
-.lbtn{display:flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid rgba(255,255,255,.1);border-radius:20px;background:rgba(255,255,255,.02);color:var(--tm);font-size:.75rem;cursor:pointer;transition:var(--tr);font-family:'Outfit',sans-serif}
-.lbtn:hover,.lbtn.liked{border-color:var(--rose);color:var(--rose);background:var(--rd)}
-.sfull{font-family:'DM Serif Display',serif;font-size:1.05rem;line-height:1.9;white-space:pre-wrap;font-style:italic;color:var(--txt)}
-.sfull-meta{margin-top:26px;padding-top:20px;border-top:1px solid rgba(255,255,255,.05);display:flex;align-items:center;justify-content:space-between;font-size:.8rem;color:var(--tm)}
-.tags-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-/* Gallery */
+
+/* === COMMENT SYSTEM CSS === */
+.comment-section { margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); }
+.comment-title { font-size: 1rem; font-weight: 600; color: var(--txt); margin-bottom: 16px; }
+.comment-list { margin-bottom: 20px; }
+.comment-item { display: flex; gap: 12px; margin-bottom: 14px; background: rgba(255,255,255,0.02); padding: 10px; border-radius: 10px; }
+.comment-avi { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; color: #fff; font-weight: 700; flex-shrink: 0; }
+.comment-right { flex: 1; }
+.comment-meta { font-size: 0.72rem; color: var(--tm); margin-bottom: 3px; display: flex; justify-content: space-between; }
+.comment-text { font-size: 0.82rem; color: var(--txt); line-height: 1.5; }
+.comment-form { display: flex; gap: 10px; align-items: flex-start; }
+.comment-input { flex: 1; padding: 10px 14px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; color: var(--txt); font-family: inherit; font-size: 0.85rem; outline: none; resize: none; min-height: 40px; transition: var(--tr); }
+.comment-input:focus { border-color: var(--pl); }
+.btn-comment { padding: 9px 16px; background: var(--p); border: none; border-radius: 10px; color: #fff; font-weight: 600; font-size: 0.82rem; cursor: pointer; transition: var(--tr); }
+.btn-comment:hover { opacity: 0.8; transform: translateY(-1px); }
+
+/* === STORIES === */
+.story-card{background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.05);border-radius:16px;padding:22px;margin-bottom:14px;transition:var(--tr);cursor:pointer}
+.story-card:hover{border-color:var(--bdrh);background:rgba(139,92,246,0.05);transform:translateX(4px)}
+.sc-excerpt{font-size:.85rem;color:var(--tm);line-height:1.6;margin-bottom:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+/* === GALLERY === */
 .pg{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.pc{position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.05)}
+.pc{position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.05);cursor:pointer}
 .pc img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
 .pc:hover img{transform:scale(1.08)}
-.pc-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(5,5,5,.9) 0%,transparent 60%);opacity:0;transition:opacity .3s;display:flex;align-items:flex-end;padding:12px}
-.pc:hover .pc-ov{opacity:1}
-.pc-cap{font-size:.75rem;color:var(--txt);line-height:1.4}
-/* Visions timeline */
+#m-lbx.on { width: min(1200px, 95vw); display: flex; flex-direction: row; }
+.lbx-main { flex: 2; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-right: 1px solid rgba(255,255,255,0.05); position:relative}
+.lbx-side { flex: 1; padding: 20px; display: flex; flex-direction: column; overflow: hidden; }
+.lbx-img { max-width: 100%; max-height: 70vh; border-radius: 14px; object-fit: contain; }
+
+/* === VISIONS === */
 .ptl{position:relative;padding-left:44px}
 .ptl::before{content:'';position:absolute;left:14px;top:6px;bottom:0;width:2px;background:rgba(255,255,255,.05)}
 .pi{position:relative;margin-bottom:24px}
 .pdot{position:absolute;left:-30px;top:10px;width:14px;height:14px;border-radius:50%;background:var(--amber);border:3px solid #0f111a;box-shadow:0 0 12px rgba(245,158,11,.6)}
 .pc2{background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:20px;transition:var(--tr)}
 .pc2:hover{border-color:rgba(245,158,11,.35);background:rgba(245,158,11,.05);transform:translateX(4px)}
-.p-date{font-size:.75rem;color:var(--amber);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;font-weight:600}
-.p-title{font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--txt);margin-bottom:8px}
-.p-desc{font-size:.85rem;color:var(--tm);line-height:1.6}
-.p-by{margin-top:12px;font-size:.75rem;color:var(--td);text-align:right}
-.p-parti{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
-.p-chip{padding:3px 10px;background:var(--pd);border:1px solid var(--bdr);border-radius:20px;font-size:.7rem;color:var(--pl);font-weight:500}
-/* Calendar */
-.cal-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
-.cal-nav{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;color:var(--txt);padding:8px 16px;cursor:pointer;font-size:1rem;transition:var(--tr);font-family:'Outfit',sans-serif}
-.cal-nav:hover{border-color:var(--pl);color:var(--pl);background:var(--pd)}
-.cal-month{font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--txt)}
+
+/* === CALENDAR === */
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:16px}
 .cdh{text-align:center;font-size:.65rem;color:var(--td);text-transform:uppercase;letter-spacing:.08em;padding:6px 0;font-weight:700}
 .cd{aspect-ratio:1;border-radius:10px;border:1px solid rgba(255,255,255,.03);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-size:.8rem;font-weight:500;color:var(--tm);transition:all .2s ease;position:relative;background:rgba(0,0,0,.2)}
 .cd:hover:not(.empty){border-color:var(--pl);color:var(--txt);background:var(--pd)}
-.cd.empty{cursor:default;background:transparent;border-color:transparent}
 .cd.today{border-color:var(--p);color:var(--pl);background:rgba(139,92,246,.1)}
-.cd.my-av{background:rgba(245,158,11,.15);border-color:var(--amber);color:var(--amber)}
 .cd.selected{border-color:var(--pl)!important;background:var(--pd)!important;color:var(--pl)!important}
 .cd.past{opacity:.4}
-.cd-dots{display:flex;gap:3px;margin-top:4px;justify-content:center;flex-wrap:wrap;max-width:36px}
 .cdd{width:5px;height:5px;border-radius:50%}
-.cal-legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:16px}
-.cl-item{display:flex;align-items:center;gap:7px;font-size:.74rem;color:var(--tm)}
-.cl-dot{width:10px;height:10px;border-radius:4px}
-.cal-info{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:16px;font-size:.85rem;color:var(--tm);line-height:1.6;min-height:60px}
-.cal-info-date{font-family:'DM Serif Display',serif;color:var(--txt);margin-bottom:10px;font-size:1.1rem}
-/* Polls */
+
+/* === POLLS === */
 .poll-option{margin-bottom:8px;cursor:pointer;padding:11px 14px;border:1px solid rgba(255,255,255,.06);border-radius:12px;background:rgba(255,255,255,.02);position:relative;overflow:hidden;transition:all .2s ease;user-select:none}
-.poll-option:hover{border-color:rgba(139,92,246,.3);background:rgba(139,92,246,.05)}
 .poll-option.voted{border-color:rgba(139,92,246,.4);background:rgba(139,92,246,.1)}
-.poll-bar{position:absolute;left:0;top:0;height:100%;background:rgba(139,92,246,.1);border-radius:inherit;transition:width .5s ease;pointer-events:none}
-.poll-voted .poll-bar{background:rgba(139,92,246,.15)}
-.poll-row{position:relative;display:flex;align-items:center;justify-content:space-between;z-index:1}
-/* Toast */
-#toast{position:fixed;bottom:30px;right:30px;z-index:9999;padding:14px 24px;background:var(--p);border-radius:14px;color:#fff;font-size:.9rem;font-weight:600;box-shadow:0 10px 30px rgba(139,92,246,.5);transform:translateY(80px);opacity:0;transition:all .4s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
+.poll-bar{position:absolute;left:0;top:0;height:100%;background:rgba(139,92,246,.1);pointer-events:none}
+
+/* === BIRTHDAY & SPIRITUAL === */
+.spiri-section { background: rgba(139,92,246,0.06); border: 1px solid var(--bdr); border-radius: 16px; padding: 20px; margin-bottom: 24px; }
+.spiri-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.spiri-item { text-align: center; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.04); }
+.spiri-val { font-size: 1.8rem; font-weight: 700; color: var(--txt); margin-bottom: 4px; }
+.spiri-val.zodiac-emoji { font-size: 2.5rem; }
+.spiri-lbl { font-size: 0.72rem; color: var(--tm); text-transform: uppercase; letter-spacing: 0.1em; }
+
+/* === PROFILE CUSTOMIZATION === */
+.color-picker { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.color-dot { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: var(--tr); }
+.color-dot.active { border-color: #fff; transform: scale(1.1); }
+
+/* === TOAST === */
+#toast{position:fixed;bottom:30px;right:30px;z-index:9999;padding:14px 24px;background:var(--p);border-radius:14px;color:#fff;font-size:.9rem;font-weight:600;box-shadow:0 10px 30px rgba(139,92,246,0.5);transform:translateY(80px);opacity:0;transition:all 0.4s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
 #toast.on{transform:translateY(0);opacity:1}
-.lbx{background:transparent!important;border:none!important;box-shadow:none!important}
-.lbx-inner{position:relative;text-align:center}
-.lbx-img{max-width:90vw;max-height:80vh;border-radius:20px;object-fit:contain;display:block;margin:0 auto;box-shadow:0 20px 60px rgba(0,0,0,.8)}
-.lbx-cap{margin-top:16px;color:var(--txt);font-family:'DM Serif Display',serif;font-size:1.1rem}
-.lbx-x{position:absolute;top:-52px;right:0;width:40px;height:40px;border:1px solid rgba(255,255,255,.2);border-radius:50%;background:rgba(0,0,0,.6);color:#fff;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--tr)}
-.lbx-x:hover{border-color:var(--rose);color:var(--rose)}
-.lbx-del{position:absolute;top:-52px;left:0;width:40px;height:40px;border:1px solid rgba(239,68,68,.3);border-radius:50%;background:rgba(0,0,0,.6);color:#FCA5A5;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--tr)}
-.lbx-del:hover{border-color:#EF4444;color:#EF4444;background:rgba(239,68,68,.2)}
-.empty-st{text-align:center;padding:40px 20px;color:var(--tm)}
-.empty-ic{width:60px;height:60px;border-radius:16px;background:rgba(255,255,255,.03);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:var(--td);border:1px dashed rgba(255,255,255,.1)}
-.empty-ic svg{width:28px;height:28px}
-.empty-st p{font-size:.9rem;line-height:1.6}
-@media(max-width:1024px){#orbit-container{grid-template-columns:1fr 1fr;grid-template-rows:auto auto;padding:100px 30px 40px;gap:20px;justify-items:center}.sidebar{flex-direction:row;justify-content:center;width:100%;gap:15px;flex-wrap:wrap}.left-sidebar{grid-column:1/3;grid-row:1;align-items:start}.right-sidebar{grid-column:1/3;grid-row:2;align-items:end}.cw{max-width:220px}}
-@media(max-width:640px){#orbit-container{display:flex;flex-direction:column;overflow-y:auto;padding:80px 20px 30px;gap:15px}.sidebar{flex-direction:column;width:100%;padding:0;gap:12px}.cw{max-width:100%}.orbit-card{padding:14px 16px;gap:14px}.ci-wrap{width:42px;height:42px;border-radius:12px;margin:0}.ci-wrap svg{width:20px;height:20px}.c-title{font-size:.9rem}.c-desc{font-size:.7rem}header{padding:14px 20px}.pg{grid-template-columns:repeat(2,1fr)}.mh{padding:20px 24px 16px}.mb{padding:16px 24px}}
+
+@media(max-width:640px){#orbit-container{display:flex;flex-direction:column;overflow-y:auto;padding:80px 20px 30px;gap:15px}.sidebar{flex-direction:column;width:100%;padding:0}.orbit-card{padding:14px 16px}.pg{grid-template-columns:repeat(2,1fr)} #m-lbx.on{flex-direction:column; overflow-y:auto} .lbx-main{border-right:none; border-bottom:1px solid rgba(255,255,255,0.05)} .cat{width:240px; height:200px; transform: scale(0.8);}}
 </style>
 </head>
 <body>
-<spline-viewer url="https://prod.spline.design/PItA7a2aHv7RbhIc/scene.splinecode"></spline-viewer>
+
+<div id="cat-bg">
+  <div class="cat" id="tuxedo-cat">
+    <div class="ear left"><div class="ear-inner"></div></div>
+    <div class="ear right"><div class="ear-inner"></div></div>
+    <div class="cat-face">
+      <div class="cat-tuxedo"></div>
+      <div class="eye-wrap">
+        <div class="eye"><div class="pupil"></div></div>
+        <div class="eye"><div class="pupil"></div></div>
+      </div>
+      <div class="whiskers">
+        <div class="whisker-l"></div>
+        <div class="whisker-r"></div>
+      </div>
+      <div class="nose-mouth">
+        <div class="nose"></div>
+        <div class="mouth-wrap">
+          <div class="mouth-l"></div>
+          <div class="mouth-r"></div>
+        </div>
+        <div class="tongue"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <header>
   <div class="logo">
-    <div class="logo-gem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/></svg></div>
+    <div class="logo-gem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/></svg></div>
   </div>
   <div id="auth-area"></div>
 </header>
+
 <div id="orbit-container">
   <div class="sidebar left-sidebar">
-    <div class="cw"><div class="orbit-card" onclick="App.open('polls')">
-      <div class="ci-wrap ci-polls"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
-      <div class="card-text"><div class="c-title">Polls</div><div class="c-desc">Vote & decide together</div></div>
+    <div class="cw"><div class="orbit-card" onclick="teaseAndOpen('polls')">
+      <div class="ci-wrap ci-polls"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+      <div class="card-text"><div class="c-title">Bình chọn</div><div class="c-desc">Cùng nhau quyết định</div></div>
     </div></div>
-    <div class="cw"><div class="orbit-card" onclick="App.open('stories')">
-      <div class="ci-wrap ci-tales"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8M8 11h6"/></svg></div>
-      <div class="card-text"><div class="c-title">Tales</div><div class="c-desc">Share stories</div></div>
+    <div class="cw"><div class="orbit-card" onclick="teaseAndOpen('stories')">
+      <div class="ci-wrap ci-tales"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8M8 11h6"/></svg></div>
+      <div class="card-text"><div class="c-title">Chuyện trò</div><div class="c-desc">Lưu giữ kỷ niệm</div></div>
     </div></div>
-    <div class="cw"><div class="orbit-card" onclick="App.open('calendar')">
-      <div class="ci-wrap ci-cal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg></div>
-      <div class="card-text"><div class="c-title">Calendar</div><div class="c-desc">Book & availability</div></div>
+    <div class="cw"><div class="orbit-card" onclick="teaseAndOpen('calendar')">
+      <div class="ci-wrap ci-cal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+      <div class="card-text"><div class="c-title">Lịch trình</div><div class="c-desc">Sắp xếp cuộc hẹn</div></div>
     </div></div>
   </div>
   <div class="sidebar right-sidebar">
-    <div class="cw"><div class="orbit-card" onclick="App.open('gallery')">
-      <div class="ci-wrap ci-gallery"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
-      <div class="card-text"><div class="c-title">Gallery</div><div class="c-desc">Group moments</div></div>
+    <div class="cw"><div class="orbit-card" onclick="teaseAndOpen('gallery')">
+      <div class="ci-wrap ci-gallery"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+      <div class="card-text"><div class="c-title">Bộ sưu tập</div><div class="c-desc">Kho báu hình ảnh</div></div>
     </div></div>
-    <div class="cw"><div class="orbit-card" onclick="App.open('visions')">
-      <div class="ci-wrap ci-vis"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L9.5 8.5 3 9.3l5 4.8-1.2 6.9L12 17.8l5.2 3.2-1.2-6.9 5-4.8-6.5-.8L12 2z"/></svg></div>
-      <div class="card-text"><div class="c-title">Visions</div><div class="c-desc">Future plans</div></div>
+    <div class="cw"><div class="orbit-card" onclick="teaseAndOpen('visions')">
+      <div class="ci-wrap ci-vis"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L9.5 8.5 3 9.3l5 4.8-1.2 6.9L12 17.8l5.2 3.2-1.2-6.9 5-4.8-6.5-.8L12 2z"/></svg></div>
+      <div class="card-text"><div class="c-title">Visions</div><div class="c-desc">Dự định tương lai</div></div>
     </div></div>
-    <div class="cw"><div class="orbit-card" onclick="App.open('profile')">
-      <div class="ci-wrap ci-profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-      <div class="card-text"><div class="c-title">Profile</div><div class="c-desc">Settings</div></div>
+    <div class="cw"><div class="orbit-card" onclick="teaseAndOpen('profile')">
+      <div class="ci-wrap ci-profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+      <div class="card-text"><div class="c-title">Cá nhân</div><div class="c-desc">Chỉnh sửa hồ sơ</div></div>
     </div></div>
   </div>
 </div>
+
 <div id="ov" onclick="App.ovClick(event)">
   <div id="m-auth"    class="modal"></div>
   <div id="m-polls"   class="modal" style="width:min(680px,92vw)"></div>
-  <div id="m-stories" class="modal" style="width:min(760px,92vw)"></div>
-  <div id="m-gallery" class="modal" style="width:min(760px,92vw)"></div>
-  <div id="m-visions" class="modal" style="width:min(680px,92vw)"></div>
+  <div id="m-stories" class="modal" style="width:min(800px,94vw)"></div>
+  <div id="m-gallery" class="modal" style="width:min(800px,94vw)"></div>
   <div id="m-calendar"class="modal" style="width:min(680px,92vw)"></div>
+  <div id="m-visions" class="modal" style="width:min(680px,92vw)"></div>
   <div id="m-profile" class="modal" style="width:min(600px,92vw)"></div>
-  <div id="m-story"   class="modal" style="width:min(680px,92vw)"></div>
-  <div id="m-lbx"     class="modal lbx" style="width:min(92vw,900px)"></div>
+  <div id="m-story"   class="modal" style="width:min(700px,92vw)"></div>
+  <div id="m-lbx"     class="modal lbx"></div>
 </div>
+
 <div id="toast"></div>
 
 <script>
 // =====================================================
-// FIREBASE CẤU HÌNH ĐÃ ĐƯỢC CHUẨN HÓA & AUTH
+// API KEYS & FIREBASE INIT
 // =====================================================
-const FIREBASE_ENABLED = true;
+const IMGBB_API_KEY = "b88d79b88ecd08ee95927cabcad04ecf";
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyAl6bD_3genvVbmCPimE9bZgHlEMDyZOJE",
   authDomain: "duachungminh.firebaseapp.com",
@@ -254,42 +320,25 @@ const FIREBASE_CONFIG = {
   projectId: "duachungminh"
 };
 
-let fbDB = null;
-let fbAuth = null;
-if (FIREBASE_ENABLED) {
-  try { 
-    firebase.initializeApp(FIREBASE_CONFIG); 
-    fbDB = firebase.database(); 
-    fbAuth = firebase.auth();
-  }
-  catch(e) { console.warn('Firebase error:', e); }
-}
+firebase.initializeApp(FIREBASE_CONFIG); 
+const fbDB = firebase.database(); 
+const fbAuth = firebase.auth();
 
-// DB Abstraction
 const DB = {
-  save(key, val) {
-    if (fbDB) fbDB.ref('data/'+key).set(val).catch(()=>{});
-    try { localStorage.setItem('wx_'+key, JSON.stringify(val)); } catch(e) {}
-  },
-  load(key, fallback) {
-    try { return JSON.parse(localStorage.getItem('wx_'+key)||'null') ?? fallback; }
-    catch(e) { return fallback; }
-  },
-  subscribe(key, cb) {
-    if (!fbDB) return;
-    fbDB.ref('data/'+key).on('value', snap => {
-      const v = snap.val();
-      if (v === null) return;
-      try { localStorage.setItem('wx_'+key, JSON.stringify(v)); } catch(e) {}
-      cb(v);
-    });
-  }
+  save(key, val) { fbDB.ref('data/'+key).set(val).catch(()=>{}); },
+  push(key, val) { fbDB.ref('data/'+key).push(val).catch(()=>{}); },
+  subscribe(key, cb) { fbDB.ref('data/'+key).on('value', snap => { cb(snap.val()); }); }
 };
 
 // =====================================================
-// DEFAULT DATA
+// STATE & UTILS
 // =====================================================
-const DEF_STORIES = [];
+const S = {
+  user:null, userFullData:null, stories:[], photos:[], plans:[], polls:[], avail:{}, comments:{}, stack:[], 
+  authMode:'signin', calYear:new Date().getFullYear(), calMonth:new Date().getMonth(), selDay:null,
+  save(k,v) { this[k]=v; DB.save(k,v); }
+};
+
 const VIS_TYPES = [
   {key:'meetup',emoji:'👥',label:'Meetup',color:'rgba(139,92,246,.2)'},
   {key:'travel',emoji:'✈️',label:'Travel',color:'rgba(16,185,129,.2)'},
@@ -298,120 +347,246 @@ const VIS_TYPES = [
   {key:'other', emoji:'💡',label:'Other', color:'rgba(255,255,255,.08)'}
 ];
 
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('on');setTimeout(()=>el.classList.remove('on'),2800)}
+function getIni(name){return name?name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase():'??'}
+function formatDate(iso){if(!iso)return''; const d=new Date(iso); return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`}
+
 // =====================================================
-// STATE
+// TUXEDO CAT INTERACTION (Đảo mắt và Lè lưỡi)
 // =====================================================
-const S = {
-  user:null, stories:[], photos:[], plans:[], polls:[], bookings:[], avail:{},
-  stack:[], calYear:2026, calMonth:0, selDay:null,
-  postOpen:false, addPlanOpen:false, pollCreateOpen:false,
-  authMode:'signin', bookType:'meetup', planType:'meetup',
-  load() {
-    try {
-      this.stories  = DB.load('stories',  [...DEF_STORIES]);
-      this.photos   = DB.load('photos',   []);
-      this.plans    = DB.load('plans',    []);
-      this.polls    = DB.load('polls',    []);
-      this.bookings = DB.load('bookings', []);
-      this.avail    = DB.load('avail',    {});
-    } catch(e) { this.stories=[]; this.photos=[]; this.plans=[]; this.polls=[]; this.bookings=[]; this.avail={}; }
-  },
-  save(k,v) { this[k]=v; DB.save(k,v); }
-};
+const cat = document.getElementById('tuxedo-cat');
+const pupils = document.querySelectorAll('.pupil');
+
+document.addEventListener('mousemove', (e) => {
+  if (S.stack.length > 0) return; 
+  const { clientX: mouseX, clientY: mouseY } = e;
+  pupils.forEach(pupil => {
+    const rect = pupil.getBoundingClientRect();
+    const eyeCenterX = rect.left + rect.width / 2;
+    const eyeCenterY = rect.top + rect.height / 2;
+    const angle = Math.atan2(mouseY - eyeCenterY, mouseX - eyeCenterX);
+    const distance = Math.min(15, Math.hypot(mouseX - eyeCenterX, mouseY - eyeCenterY) / 25);
+    pupil.style.transform = `translate(calc(-50% + ${Math.cos(angle)*distance}px), calc(-50% + ${Math.sin(angle)*distance}px))`;
+  });
+});
+
+function teaseAndOpen(modalName) {
+  cat.classList.add('teasing');
+  setTimeout(() => cat.classList.remove('teasing'), 1000); // Lè lưỡi 1 giây
+  setTimeout(() => App.open(modalName), 300); // Mở hộp thoại ngay
+}
 
 // =====================================================
 // APP CONTROL
 // =====================================================
 const App = {
-  open(name,data) { this.closeAll(); S.stack=[name]; const el=document.getElementById('m-'+name); if(!el) return; document.getElementById('ov').classList.add('on'); el.classList.add('on'); this.render(name,data); },
+  open(name,data) { this.closeAll(); S.stack=[name]; const el=document.getElementById('m-'+name); if(!el) return; document.getElementById('ov').classList.add('on'); el.classList.add('on'); document.getElementById('cat-bg').classList.add('on'); this.render(name,data); },
   openOver(name,data) { const cur=document.querySelector('.modal.on'); if(cur) cur.classList.remove('on'); S.stack.push(name); const el=document.getElementById('m-'+name); document.getElementById('ov').classList.add('on'); el.classList.add('on'); this.render(name,data); },
   back() { S.stack.pop(); if(!S.stack.length){this.closeAll();return;} const prev=S.stack[S.stack.length-1]; document.querySelectorAll('.modal.on').forEach(m=>m.classList.remove('on')); const el=document.getElementById('m-'+prev); el.classList.add('on'); this.render(prev); },
-  closeAll() { document.getElementById('ov').classList.remove('on'); document.querySelectorAll('.modal').forEach(m=>m.classList.remove('on')); S.stack=[]; S.postOpen=false; S.addPlanOpen=false; S.pollCreateOpen=false; },
+  closeAll() { document.getElementById('ov').classList.remove('on'); document.querySelectorAll('.modal').forEach(m=>m.classList.remove('on')); document.getElementById('cat-bg').classList.remove('on'); S.stack=[]; S.postOpen=false; S.pollCreateOpen=false; S.addPlanOpen=false; },
   ovClick(e) { if(e.target===document.getElementById('ov')) this.closeAll(); },
   render(name,data) {
-    if(name==='auth')     Auth.render();
-    else if(name==='polls')    Polls.render();
-    else if(name==='stories')  Stories.render();
-    else if(name==='gallery')  Gallery.render();
-    else if(name==='visions')  Visions.render();
+    if(name==='auth') Auth.render();
+    else if(name==='stories') Stories.render();
+    else if(name==='story') Stories.renderDetail(data);
+    else if(name==='gallery') Gallery.render();
+    else if(name==='lbx') Gallery.renderLbx(data);
+    else if(name==='profile') Profile.render();
+    else if(name==='polls') Polls.render();
+    else if(name==='visions') Visions.render();
     else if(name==='calendar') Cal.render();
-    else if(name==='profile')  Profile.render();
-    else if(name==='story')    Stories.renderDetail(data);
-    else if(name==='lbx')      Gallery.renderLbx(data);
   },
   updateAuth() {
     const a=document.getElementById('auth-area');
     if(S.user) { 
-      const ini=S.user.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(); 
-      a.innerHTML=`<div class="user-pill"><div class="avi">${ini}</div><span class="u-name">${S.user.name}</span><button class="btn-so" onclick="Auth.out()">Sign out</button></div>`; 
-    }
-    else { 
-      a.innerHTML=`<button class="btn-si" onclick="App.open('auth')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Sign In</button>`; 
+      const data = S.userFullData || {};
+      const ini=getIni(S.user.name); 
+      const color = data.avatarColor || '#8B5CF6';
+      const status = data.status || 'Đang trực tuyến';
+      a.innerHTML=`<div class="user-pill" onclick="App.open('profile')">
+        <div class="avi" style="background:${color}">${ini}</div>
+        <div class="u-name-status"><span class="u-name">${S.user.name}</span><span class="u-status" title="${status}">${status}</span></div>
+        <button class="btn-so" onclick="event.stopPropagation();Auth.out()">Thoát</button>
+      </div>`; 
+    } else { 
+      a.innerHTML=`<button class="btn-si" onclick="App.open('auth')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Đăng nhập</button>`; 
     }
   }
 };
 
 // =====================================================
-// AUTH (SỬ DỤNG FIREBASE AUTHENTICATION)
+// AUTH (Email/Pass + Cập nhật Ngày Sinh)
 // =====================================================
 const Auth = {
   render() {
     const el=document.getElementById('m-auth'),m=S.authMode;
-    el.innerHTML=`<div class="mh"><div class="mt">${m==='signin'?'Sign In':'Create Account'}</div><button class="mbtn-x" onclick="App.closeAll()">✕</button></div>
+    el.innerHTML=`<div class="mh"><div class="mt">${m==='signin'?'Đăng nhập':'Tạo tài khoản'}</div><button class="mbtn-x" onclick="App.closeAll()">✕</button></div>
     <div class="mb">
-      <div class="atabs"><button class="atab ${m==='signin'?'on':''}" onclick="Auth.setMode('signin')">Sign In</button><button class="atab ${m==='register'?'on':''}" onclick="Auth.setMode('register')">Create Account</button></div>
+      <div class="atabs"><button class="atab ${m==='signin'?'on':''}" onclick="Auth.setMode('signin')">Đăng nhập</button><button class="atab ${m==='register'?'on':''}" onclick="Auth.setMode('register')">Đăng ký</button></div>
       <div id="auth-err" class="err"></div>
-      
-      ${m==='register'?`<div class="fg"><label class="fl">Tên hiển thị</label><input class="fi" id="a-name" placeholder="Tên của bạn"></div>`:''}
+      ${m==='register'?`<div class="fg"><label class="fl">Tên hiển thị</label><input class="fi" id="a-name" placeholder="Tên thật của bạn"></div>
+                        <div class="fg"><label class="fl">Ngày tháng năm sinh</label><input class="fi" id="a-dob" type="date"></div>`:''}
       <div class="fg"><label class="fl">Email</label><input class="fi" id="a-email" placeholder="you@email.com" type="email"></div>
-      <div class="fg"><label class="fl">Mật khẩu</label><input class="fi" id="a-pass" placeholder="Min 6 characters" type="password" onkeydown="if(event.key==='Enter')Auth.submit()"></div>
-      ${m==='register'?`<div class="fg"><label class="fl">Xác nhận mật khẩu</label><input class="fi" id="a-pass2" placeholder="Repeat password" type="password" onkeydown="if(event.key==='Enter')Auth.submit()"></div>`:''}
-      
-      <button class="btn-p" onclick="Auth.submit()">${m==='signin'?'Đăng nhập →':'Tạo tài khoản →'}</button>
-      <p class="hint">${m==='signin'?`Chưa có tài khoản? <a onclick="Auth.setMode('register')">Đăng ký ngay</a>`:`Đã có tài khoản? <a onclick="Auth.setMode('signin')">Đăng nhập</a>`}</p>
+      <div class="fg"><label class="fl">Mật khẩu</label><input class="fi" id="a-pass" placeholder="Tối thiểu 6 ký tự" type="password" onkeydown="if(event.key==='Enter')Auth.submit()"></div>
+      <button class="btn-p" onclick="Auth.submit()">${m==='signin'?'Đăng nhập ngay →':'Tạo tài khoản →'}</button>
     </div>`;
   },
   setMode(m){S.authMode=m;Auth.render()},
   submit(){
     const err=s=>{const e=document.getElementById('auth-err');e.textContent=s;e.classList.add('on')};
     document.getElementById('auth-err').classList.remove('on');
-    
-    const email=(document.getElementById('a-email')||{}).value||'';
-    const pass=(document.getElementById('a-pass')||{}).value||'';
-    
-    if(!email||!pass){err('Vui lòng điền đầy đủ thông tin.');return}
-    if(pass.length<6){err('Mật khẩu phải từ 6 ký tự trở lên.');return}
+    const email=document.getElementById('a-email').value, pass=document.getElementById('a-pass').value;
+    if(!email||!pass||pass.length<6){err('Vui lòng điền email và mật khẩu (>=6 ký tự).');return}
     
     if(S.authMode==='register'){
-      const name=(document.getElementById('a-name')||{}).value||'';
-      const pass2=(document.getElementById('a-pass2')||{}).value||'';
-      if(!name.trim()){err('Vui lòng nhập tên hiển thị.');return}
-      if(pass!==pass2){err('Mật khẩu không khớp.');return}
-      
+      const name=document.getElementById('a-name').value, dob=document.getElementById('a-dob').value;
+      if(!name.trim()||!dob){err('Vui lòng nhập đầy đủ tên và ngày sinh.');return}
       toast('Đang tạo tài khoản... ⏳');
       fbAuth.createUserWithEmailAndPassword(email, pass)
         .then(cred => {
-          return cred.user.updateProfile({ displayName: name.trim() });
-        })
-        .then(() => {
-          App.closeAll(); 
-          toast('Tạo tài khoản thành công! 🎉');
-        })
-        .catch(error => { err('Lỗi: ' + error.message); });
-        
+          cred.user.updateProfile({ displayName: name.trim() });
+          fbDB.ref('data/users/'+cred.user.uid).set({ dob, joined: new Date().toISOString(), avatarColor: '#8B5CF6', status: 'Mới tham gia' });
+          App.closeAll(); toast('Tạo tài khoản thành công! 🎉');
+        }).catch(error => err('Lỗi: ' + error.message));
     } else {
       toast('Đang đăng nhập... ⏳');
-      fbAuth.signInWithEmailAndPassword(email, pass)
-        .then(() => {
-          App.closeAll(); 
-          toast('Đăng nhập thành công! 🎉');
-        })
-        .catch(error => { err('Sai email hoặc mật khẩu!'); });
+      fbAuth.signInWithEmailAndPassword(email, pass).then(()=>App.closeAll()).catch(()=>err('Sai email hoặc mật khẩu!'));
     }
   },
-  out(){
-    fbAuth.signOut().then(() => toast('Đã đăng xuất. 👋'));
+  out(){fbAuth.signOut().then(()=>toast('Đã đăng xuất. 👋'));}
+};
+
+// =====================================================
+// BÌNH LUẬN
+// =====================================================
+const Comments = {
+  listHTML(category, itemId) {
+    const list = S.comments && S.comments[category] && S.comments[category][itemId];
+    if (!list) return '<div style="color:var(--td);font-size:0.8rem;text-align:center;padding:10px">Chưa có bình luận nào. Hãy là người đầu tiên!</div>';
+    const sorted = Object.values(list).sort((a,b) => new Date(a.date) - new Date(b.date));
+    return sorted.map(c => {
+      const ini = getIni(c.author), color = c.authorColor || '#475569';
+      return `<div class="comment-item">
+        <div class="comment-avi" style="background:${color}">${ini}</div>
+        <div class="comment-right">
+          <div class="comment-meta"><span style="font-weight:600;color:var(--txt)">${c.author}</span><span>${formatDate(c.date)}</span></div>
+          <div class="comment-text">${c.text}</div>
+        </div>
+      </div>`;
+    }).join('');
+  },
+  formHTML(category, itemId) {
+    if (!S.user) return '<div class="info-banner" style="font-size:0.8rem;padding:10px;margin:0">Đăng nhập để bình luận</div>';
+    return `<div class="comment-form">
+      <textarea class="comment-input" id="cmt-input-${itemId}" placeholder="Viết bình luận..." rows="1"></textarea>
+      <button class="btn-comment" onclick="Comments.post('${category}', '${itemId}')">Gửi</button>
+    </div>`;
+  },
+  post(category, itemId) {
+    const input = document.getElementById(`cmt-input-${itemId}`);
+    if (!input.value.trim()) return;
+    DB.push(`comments/${category}/${itemId}`, { text: input.value.trim(), author: S.user.name, authorColor: S.userFullData?.avatarColor || '#475569', date: new Date().toISOString() });
+    input.value = ''; toast('Đã gửi bình luận! 💬');
   }
+};
+
+// =====================================================
+// STORIES (Tales)
+// =====================================================
+const Stories = {
+  render(){
+    const el=document.getElementById('m-stories');const can=!!S.user;
+    el.innerHTML=`<div class="mh"><div class="mt">Chuyện trò</div><div class="mha">${can?`<button class="btn-s" onclick="Stories.togglePost()">${S.postOpen?'✕ Hủy':'+ Viết chuyện'}</button>`:''}<button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
+    <div class="mb">${!can?`<div class="info-banner"><a onclick="App.open('auth')">Đăng nhập</a> để chia sẻ câu chuyện</div>`:''}
+    <div id="sf-cont">${S.postOpen&&can?Stories.pFormHTML():''}</div><div id="sl">${this.listHTML()}</div></div>`;
+  },
+  pFormHTML(){return`<div class="post-box"><div class="post-box-title">✍️ Chuyện mới</div>
+  <div class="fg"><label class="fl">Tiêu đề</label><input class="fi" id="sf-t" placeholder="Tên câu chuyện..."></div>
+  <div class="fg"><label class="fl">Nội dung</label><textarea class="fta" id="sf-c" style="min-height:140px" placeholder="Bắt đầu viết..."></textarea></div>
+  <button class="btn-p" onclick="Stories.post()">Đăng bài</button></div>`},
+  listHTML(){
+    if(!S.stories.length) return `<div class="empty-st"><p>Chưa có câu chuyện nào.</p></div>`;
+    return S.stories.slice().reverse().slice(0, 20).map(s=>{
+      const author = s.author || 'Ẩn danh'; const canDel = !!S.user;
+      const cmtCount = (S.comments?.stories && S.comments.stories[s.id]) ? Object.keys(S.comments.stories[s.id]).length : 0;
+      return`<div class="story-card" onclick="App.openOver('story', ${s.id})">
+        <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:10px">
+          <div class="sc-title" style="font-weight:600;color:var(--pl)">${s.title}</div>
+          ${canDel?`<button onclick="event.stopPropagation(); Stories.delete(${s.id})" style="padding:3px 10px;background:transparent;border:1px solid rgba(239,68,68,0.3);border-radius:20px;color:rgba(239,68,68,0.7);font-size:0.7rem;cursor:pointer;">Xóa</button>`:''}
+        </div>
+        <div class="sc-excerpt">${s.content}</div>
+        <div class="sc-meta" style="font-size:0.75rem;color:var(--tm);display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,0.05);padding-top:10px">
+          <span>Tác giả: ${author} · ${s.date}</span><span>💬 ${cmtCount} bình luận</span>
+        </div>
+      </div>`;
+    }).join('')
+  },
+  togglePost(){S.postOpen=!S.postOpen;Stories.render()},
+  post(){
+    const t=(document.getElementById('sf-t')||{}).value||'', c=(document.getElementById('sf-c')||{}).value||'';
+    if(!t.trim()||!c.trim()){toast('Vui lòng điền đủ!');return}
+    if(!Array.isArray(S.stories)) S.stories = Object.values(S.stories || {});
+    S.stories.push({id:Date.now(),title:t.trim(),content:c.trim(),author:S.user.name,date:new Date().toISOString().split('T')[0]});
+    S.save('stories',S.stories); S.postOpen=false; Stories.render(); toast('Đã đăng! ✨')
+  },
+  renderDetail(id){
+    const s = S.stories.find(x=>x.id===id); if(!s) return;
+    document.getElementById('m-story').innerHTML=`
+      <div class="mh"><div class="mt" style="font-size:1.2rem;flex:1;color:var(--pl)">${s.title}</div><div class="mha"><button class="mbtn-x" onclick="App.back()">←</button><button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
+      <div class="mb"><div class="sfull" style="white-space:pre-wrap;line-height:1.8;color:var(--txt);font-size:0.95rem;margin-bottom:20px">${s.content}</div>
+        <div style="font-size:0.8rem;color:var(--tm);text-align:right">Viết bởi ${s.author} ngày ${s.date}</div>
+        <div class="comment-section"><div class="comment-title">Bình luận</div>
+          <div class="comment-list" id="story-comments-${s.id}">${Comments.listHTML('stories', s.id)}</div>
+          ${Comments.formHTML('stories', s.id)}
+        </div>
+      </div>`;
+  },
+  delete(id) { if(confirm('Xóa câu chuyện này?')){ S.stories = S.stories.filter(s=>s.id!==id); S.save('stories', S.stories); toast('Đã xóa. 🗑️'); Stories.render(); } }
+};
+
+// =====================================================
+// GALLERY (Đã thêm Nút Xóa và Bình luận)
+// =====================================================
+const Gallery = {
+  render(){const el=document.getElementById('m-gallery');const can=!!S.user;el.innerHTML=`<div class="mh"><div class="mt">Bộ sưu tập</div><div class="mha">${can?`<button class="btn-s" onclick="Gallery.upload()">+ Thêm Ảnh</button>`:''}<button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
+  <div class="mb">${!can?`<div class="info-banner"><a onclick="App.open('auth')">Đăng nhập</a> để thêm ảnh</div>`:''}
+  <input type="file" id="gfup" accept="image/*" style="display:none" onchange="Gallery.handleUpload(event)">
+  ${S.photos.length?`<div class="pg">${S.photos.slice().reverse().slice(0, 30).map(p=>`<div class="pc"><img src="${p.url}" loading="lazy" onclick="App.openOver('lbx',${p.id})"><div class="pc-ov" onclick="App.openOver('lbx',${p.id})"><div class="pc-cap">${p.cap}<br><span style="opacity:.6;font-size:.65rem">${p.by}</span></div></div>${S.user?`<button onclick="event.stopPropagation();Gallery.delete(${p.id})" title="Xóa ảnh" style="position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:rgba(220,38,38,.9);border:none;color:#fff;font-size:.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;box-shadow:0 2px 10px rgba(0,0,0,.6);transition:transform .15s;opacity:.85" onmouseover="this.style.transform='scale(1.15)';this.style.opacity='1'" onmouseout="this.style.transform='scale(1)';this.style.opacity='.85'">🗑</button>`:''}</div>`).join('')}</div>`:`<div class="empty-st"><p>Chưa có ảnh.</p></div>`}</div>`;},
+  upload(){document.getElementById('gfup').click()},
+  handleUpload(e){
+    const f=e.target.files[0];if(!f)return;
+    if(f.size>32*1024*1024){toast('Ảnh quá lớn! Tối đa 32MB ❌');e.target.value='';return}
+    const cap=prompt('Chú thích ảnh:','')||'Một kỷ niệm'; toast('Đang tải ảnh lên... ⏳');
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      const base64=ev.target.result.split(',')[1]; const body=new URLSearchParams(); body.append('key',IMGBB_API_KEY); body.append('image',base64);
+      fetch('https://api.imgbb.com/1/upload',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body.toString()})
+      .then(r=>r.json()).then(result=>{
+        if(result.success){
+          if(!Array.isArray(S.photos))S.photos=Object.values(S.photos||{});
+          S.photos.push({id:Date.now(),url:result.data.url,cap:cap.trim(),by:S.user.name,date:new Date().toISOString().split('T')[0]});
+          S.save('photos',S.photos);Gallery.render();toast('Đã thêm ảnh! 📸');
+        }else toast('Lỗi API ImgBB ❌');
+      }).catch(()=>toast('Lỗi mạng! ❌'));
+    }; reader.readAsDataURL(f); e.target.value='';
+  },
+  renderLbx(id){
+    const p = S.photos.find(x=>x.id===id); if(!p) return;
+    document.getElementById('m-lbx').innerHTML=`
+      <div class="lbx-main">
+        <img class="lbx-img" src="${p.url}">
+        <button class="lbx-x" onclick="App.back()" style="position:absolute;top:20px;right:20px;width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,0.5);color:#fff;border:none;cursor:pointer">✕</button>
+      </div>
+      <div class="lbx-side">
+        <div style="margin-bottom:20px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom:15px"><div style="font-weight:600;color:var(--txt);margin-bottom:4px;font-size:1.1rem">${p.cap}</div><div style="font-size:0.8rem;color:var(--tm)">Đăng bởi ${p.by} ngày ${p.date}</div></div>
+        <div class="comment-section" style="margin-top:0; border:none; flex:1; display:flex; flex-direction:column; overflow:hidden">
+          <div class="comment-title">Bình luận</div>
+          <div class="comment-list" id="photo-comments-${p.id}" style="flex:1; overflow-y:auto">${Comments.listHTML('photos', p.id)}</div>
+          ${Comments.formHTML('photos', p.id)}
+        </div>
+      </div>`;
+  },
+  delete(id){ if(confirm('Xóa ảnh này?')){ S.photos=S.photos.filter(x=>x.id!==id); S.save('photos',S.photos); App.back(); Gallery.render(); toast('Đã xóa. 🗑️'); } }
 };
 
 // =====================================================
@@ -420,202 +595,54 @@ const Auth = {
 const Polls = {
   render() {
     const el=document.getElementById('m-polls');const can=!!S.user;
-    el.innerHTML=`<div class="mh"><div class="mt">Polls</div><div class="mha">${can?`<button class="btn-s" onclick="Polls.toggleCreate()">${S.pollCreateOpen?'✕ Cancel':'+ New Poll'}</button>`:''}<button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
-    <div class="mb">${!can?`<div class="info-banner"><a onclick="App.open('auth')">Sign in</a> to create polls and vote</div>`:''}
-    <div id="poll-form-c">${S.pollCreateOpen&&can?Polls.formHTML():''}</div>
-    <div id="poll-list">${Polls.listHTML()}</div></div>`;
+    el.innerHTML=`<div class="mh"><div class="mt">Bình chọn</div><div class="mha">${can?`<button class="btn-s" onclick="Polls.toggleCreate()">${S.pollCreateOpen?'✕ Hủy':'+ Tạo mới'}</button>`:''}<button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
+    <div class="mb">${!can?`<div class="info-banner"><a onclick="App.open('auth')">Sign in</a> để tạo bình chọn</div>`:''}
+    <div id="poll-form-c">${S.pollCreateOpen&&can?Polls.formHTML():''}</div><div id="poll-list">${Polls.listHTML()}</div></div>`;
   },
-  formHTML(){return`<div class="post-box"><div class="post-box-title">🗳️ New Poll</div>
-  <div class="fg"><label class="fl">Question</label><input class="fi" id="poll-q" placeholder="e.g. Where should we travel this summer?"></div>
-  <div class="fg"><label class="fl">Options (min 2, max 4)</label>
-    <input class="fi" id="po-0" placeholder="Option 1" style="margin-bottom:8px">
-    <input class="fi" id="po-1" placeholder="Option 2" style="margin-bottom:8px">
-    <input class="fi" id="po-2" placeholder="Option 3 (optional)" style="margin-bottom:8px">
-    <input class="fi" id="po-3" placeholder="Option 4 (optional)">
-  </div>
-  <button class="btn-p" onclick="Polls.create()">Launch Poll 🗳️</button></div>`},
+  formHTML(){return`<div class="post-box"><div class="post-box-title">🗳️ Bình chọn mới</div>
+  <div class="fg"><label class="fl">Câu hỏi</label><input class="fi" id="poll-q" placeholder="Ví dụ: Tối nay đi đâu?"></div>
+  <div class="fg"><label class="fl">Tùy chọn (từ 2 đến 4)</label>
+    <input class="fi" id="po-0" placeholder="Lựa chọn 1" style="margin-bottom:8px">
+    <input class="fi" id="po-1" placeholder="Lựa chọn 2" style="margin-bottom:8px">
+    <input class="fi" id="po-2" placeholder="Lựa chọn 3 (không bắt buộc)" style="margin-bottom:8px">
+    <input class="fi" id="po-3" placeholder="Lựa chọn 4 (không bắt buộc)">
+  </div><button class="btn-p" onclick="Polls.create()">Tạo bình chọn 🗳️</button></div>`},
   listHTML(){
-    if(!S.polls||!S.polls.length)return`<div class="empty-st"><div class="empty-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><p>No polls yet.<br>Create one to let friends vote!</p></div>`;
+    if(!S.polls||!S.polls.length)return`<div class="empty-st"><p>Chưa có bình chọn nào.</p></div>`;
     return S.polls.slice().reverse().map(poll=>{
       const total=poll.options.reduce((s,o)=>s+(o.voters?o.voters.length:0),0);
       const myVote=S.user?poll.options.findIndex(o=>o.voters&&o.voters.includes(S.user.name)):-1;
       const canDel=!!S.user;
-      return`<div style="background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:20px;margin-bottom:14px">
+      return`<div style="background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.05);border-radius:16px;padding:20px;margin-bottom:14px">
         <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:14px">
           <div><div style="font-family:'DM Serif Display',serif;font-size:1.08rem;color:var(--txt);margin-bottom:4px">${poll.question}</div>
-          <div style="font-size:.73rem;color:var(--td)">by ${poll.createdBy} · ${total} vote${total!==1?'s':''}</div></div>
-          ${canDel?`<button onclick="Polls.delete(${poll.id})" style="padding:4px 10px;background:transparent;border:1px solid rgba(239,68,68,.3);border-radius:20px;color:rgba(239,68,68,.6);font-size:.7rem;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s" onmouseover="this.style.background='rgba(239,68,68,.1)'" onmouseout="this.style.background='transparent'">Delete</button>`:''}
+          <div style="font-size:.73rem;color:var(--td)">by ${poll.createdBy} · ${total} phiếu</div></div>
+          ${canDel?`<button onclick="Polls.delete(${poll.id})" style="padding:4px 10px;background:transparent;border:1px solid rgba(239,68,68,.3);border-radius:20px;color:rgba(239,68,68,.6);font-size:.7rem;cursor:pointer;">Xóa</button>`:''}
         </div>
         ${poll.options.filter(o=>o.text&&o.text.trim()).map((opt,i)=>{
-          const votes=opt.voters?opt.voters.length:0;
-          const pct=total>0?Math.round(votes/total*100):0;
-          const isMe=myVote===i;
+          const votes=opt.voters?opt.voters.length:0; const pct=total>0?Math.round(votes/total*100):0; const isMe=myVote===i;
           return`<div class="poll-option ${isMe?'voted':''}" onclick="${S.user?`Polls.vote(${poll.id},${i})`:`App.open('auth')`}">
-            <div class="poll-bar" style="width:${pct}%"></div>
-            <div class="poll-row">
-              <span style="font-size:.88rem;color:${isMe?'var(--pl)':'var(--txt)'};font-weight:${isMe?600:400}">${opt.text}${isMe?' ✓':''}</span>
-              <span style="font-size:.78rem;color:var(--tm);font-weight:600">${pct}% · ${votes}</span>
-            </div>
+            <div class="poll-bar" style="width:${pct}%"></div><div class="poll-row"><span style="font-size:.88rem;color:${isMe?'var(--pl)':'var(--txt)'};font-weight:${isMe?600:400}">${opt.text}${isMe?' ✓':''}</span><span style="font-size:.78rem;color:var(--tm);font-weight:600">${pct}% · ${votes}</span></div>
           </div>`;
         }).join('')}
       </div>`;
     }).join('');
   },
-  toggleCreate(){S.pollCreateOpen=!S.pollCreateOpen;document.getElementById('poll-form-c').innerHTML=S.pollCreateOpen?Polls.formHTML():'';const btn=document.querySelector('#m-polls .btn-s');if(btn)btn.textContent=S.pollCreateOpen?'✕ Cancel':'+ New Poll'},
+  toggleCreate(){S.pollCreateOpen=!S.pollCreateOpen;Polls.render()},
   create(){
-    const q=(document.getElementById('poll-q')||{}).value||'';if(!q.trim()){toast('Add a question first.');return}
-    const opts=[0,1,2,3].map(i=>(document.getElementById('po-'+i)||{}).value||'').filter(t=>t.trim());
-    if(opts.length<2){toast('Need at least 2 options.');return}
-    const poll={id:Date.now(),question:q.trim(),options:opts.map(t=>({text:t.trim(),voters:[]})),createdBy:S.user.name,createdAt:new Date().toISOString()};
-    if(!S.polls)S.polls=[];S.polls.push(poll);S.save('polls',S.polls);S.pollCreateOpen=false;Polls.render();toast('Poll launched! 🗳️');
+    const q=(document.getElementById('poll-q')||{}).value||'', opts=[0,1,2,3].map(i=>(document.getElementById('po-'+i)||{}).value||'').filter(t=>t.trim());
+    if(!q.trim()||opts.length<2){toast('Điền đủ câu hỏi và ít nhất 2 lựa chọn.');return}
+    const poll={id:Date.now(),question:q.trim(),options:opts.map(t=>({text:t.trim(),voters:[]})),createdBy:S.user.name};
+    if(!S.polls)S.polls=[];S.polls.push(poll);S.save('polls',S.polls);S.pollCreateOpen=false;Polls.render();toast('Đã tạo bình chọn!');
   },
   vote(pollId,optIdx){
-    if(!S.user){App.open('auth');return}
-    const poll=S.polls.find(p=>p.id===pollId);if(!poll)return;
+    if(!S.user)return; const poll=S.polls.find(p=>p.id===pollId);if(!poll)return;
     const cur=poll.options.findIndex(o=>o.voters&&o.voters.includes(S.user.name));
     if(cur!==-1)poll.options[cur].voters=poll.options[cur].voters.filter(v=>v!==S.user.name);
     if(cur!==optIdx){if(!poll.options[optIdx].voters)poll.options[optIdx].voters=[];poll.options[optIdx].voters.push(S.user.name)}
     S.save('polls',S.polls);document.getElementById('poll-list').innerHTML=Polls.listHTML();
   },
-  delete(id){if(!confirm('Delete this poll?'))return;S.polls=S.polls.filter(p=>p.id!==id);S.save('polls',S.polls);Polls.render();toast('Poll deleted.')}
-};
-
-// =====================================================
-// STORIES
-// =====================================================
-const Stories = {
-  render(){
-    const el=document.getElementById('m-stories');const can=!!S.user;
-    el.innerHTML=`<div class="mh"><div class="mt">Tales</div><div class="mha">${can?`<button class="btn-s" onclick="Stories.togglePost()">${S.postOpen?'✕ Cancel':'+ New Tale'}</button>`:''}<button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
-    <div class="mb">${!can?`<div class="info-banner"><a onclick="App.open('auth')">Sign in</a> to share a story</div>`:''}
-    <div id="sf-cont">${S.postOpen&&can?Stories.pFormHTML():''}</div><div id="sl">${Stories.listHTML()}</div></div>`;
-  },
-  pFormHTML(){return`<div class="post-box"><div class="post-box-title">✍️ New Entry</div>
-  <div class="fg"><label class="fl">Title</label><input class="fi" id="sf-t" placeholder="Give your story a name..."></div>
-  <div class="fg"><label class="fl">Story</label><textarea class="fta" id="sf-c" style="min-height:140px" placeholder="Begin your tale here..."></textarea></div>
-  <div class="fg"><label class="fl">Tags</label><input class="fi" id="sf-g" placeholder="music, nights, memories..."></div>
-  <button class="btn-p" onclick="Stories.post()">Publish Story</button></div>`},
-  listHTML(){
-    let arr = [];
-    if (Array.isArray(S.stories)) { arr = S.stories; }
-    else if (typeof S.stories === 'object' && S.stories !== null) { arr = Object.values(S.stories); }
-
-    if(!arr.length) return`<div class="empty-st"><p>No stories yet.</p></div>`;
-
-    return arr.slice().reverse().map(s=>{
-      const author = s.author || 'Unknown';
-      const ini = author.substring(0,2).toUpperCase();
-      const likedBy = s.likedBy || []; 
-      const likes = s.likes || 0;
-      const liked = S.user && likedBy.includes(S.user.name);
-      const tags = s.tags || [];
-      const content = s.content || '';
-      const canDel = !!S.user;
-
-      return`<div class="story-card" onclick="Stories.detail(${s.id})">
-        <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:10px">
-          <div class="sc-title" style="margin-bottom:0">${s.title}</div>
-          ${canDel?`<button onclick="event.stopPropagation(); Stories.delete(${s.id})" style="padding:4px 10px;background:transparent;border:1px solid rgba(239,68,68,.3);border-radius:20px;color:rgba(239,68,68,.6);font-size:.7rem;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s" onmouseover="this.style.background='rgba(239,68,68,.1)'" onmouseout="this.style.background='transparent'">Delete</button>`:''}
-        </div>
-        <div class="sc-excerpt">${content.replace(/\n/g,' ').substring(0,120)}...</div>
-        <div class="sc-meta"><div class="sc-author"><div class="sc-avi">${ini}</div>${author} · ${s.date}</div><button class="lbtn ${liked?'liked':''}" onclick="event.stopPropagation();Stories.like(${s.id})">♥ ${likes}</button></div>${tags.length?`<div class="tags-row" style="margin-top:10px">${tags.map(t=>`<span class="tag">#${t}</span>`).join('')}</div>`:''}</div>`;
-    }).join('')
-  },
-  togglePost(){S.postOpen=!S.postOpen;Stories.render()},
-  post(){
-    const t=(document.getElementById('sf-t')||{}).value||'';
-    const c=(document.getElementById('sf-c')||{}).value||'';
-    if(!t.trim()||!c.trim()){toast('Fill title and story!');return}
-    const tags=((document.getElementById('sf-g')||{}).value||'').split(',').map(x=>x.trim()).filter(Boolean);
-    
-    if(!Array.isArray(S.stories)) S.stories = Object.values(S.stories || {});
-
-    S.stories.push({id:Date.now(),title:t.trim(),content:c.trim(),author:S.user.name,date:new Date().toISOString().split('T')[0],likes:0,likedBy:[],tags});
-    S.save('stories',S.stories);
-    S.postOpen=false;
-    Stories.render();
-    toast('Published! ✨')
-  },
-  like(id){
-    if(!S.user){toast('Sign in to like');return}
-    if(!Array.isArray(S.stories)) S.stories = Object.values(S.stories || {});
-    const s=S.stories.find(x=>x.id===id);
-    if(!s)return;
-    if(!s.likedBy) s.likedBy = [];
-    const i=s.likedBy.indexOf(S.user.name);
-    if(i>-1){s.likedBy.splice(i,1);s.likes=Math.max(0,(s.likes||0)-1)}
-    else{s.likedBy.push(S.user.name);s.likes=(s.likes||0)+1}
-    S.save('stories',S.stories);
-    document.getElementById('sl').innerHTML=Stories.listHTML()
-  },
-  detail(id){
-    if(!Array.isArray(S.stories)) return;
-    const s=S.stories.find(x=>x.id===id);
-    if(s)App.openOver('story',s)
-  },
-  renderDetail(s){
-    const content = s.content || '';
-    document.getElementById('m-story').innerHTML=`<div class="mh"><div class="mt" style="font-size:1.15rem;flex:1">${s.title}</div><div class="mha"><button class="mbtn-x" onclick="App.back()">←</button><button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div><div class="mb"><div class="sfull">${content.replace(/\n/g,'<br>')}</div><div class="sfull-meta"><div>By ${s.author}</div><div>${s.date}</div></div></div>`
-  },
-  delete(id) {
-    if(!confirm('Are you sure you want to delete this tale?')) return;
-    if(!Array.isArray(S.stories)) S.stories = Object.values(S.stories || {});
-    S.stories = S.stories.filter(s => s.id !== id);
-    S.save('stories', S.stories);
-    Stories.render();
-    toast('Tale deleted. 🗑️');
-  }
-};
-
-// =====================================================
-// GALLERY 
-// =====================================================
-const IMGBB_API_KEY = "b88d79b88ecd08ee95927cabcad04ecf";
-
-const Gallery = {
-  render(){const el=document.getElementById('m-gallery');const can=!!S.user;el.innerHTML=`<div class="mh"><div class="mt">Gallery</div><div class="mha">${can?`<button class="btn-s" onclick="Gallery.upload()">+ Add Photo</button>`:''}<button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
-  <div class="mb">${!can?`<div class="info-banner"><a onclick="App.open('auth')">Sign in</a> to add photos</div>`:''}
-  <input type="file" id="gfup" accept="image/*" style="display:none" onchange="Gallery.handleUpload(event)">
-  ${S.photos.length?`<div class="pg">${S.photos.map(p=>`<div class="pc"><img src="${p.url}" loading="lazy" onclick="Gallery.lbx(${p.id})" style="cursor:pointer"><div class="pc-ov" onclick="Gallery.lbx(${p.id})" style="cursor:pointer"><div class="pc-cap">${p.cap}<br><span style="opacity:.6;font-size:.65rem">${p.by}</span></div></div>${S.user?`<button onclick="event.stopPropagation();Gallery.delete(${p.id})" title="Xóa ảnh" style="position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:rgba(220,38,38,.9);border:none;color:#fff;font-size:.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;box-shadow:0 2px 10px rgba(0,0,0,.6);transition:transform .15s,opacity .15s;opacity:.85" onmouseover="this.style.transform='scale(1.18)';this.style.opacity='1'" onmouseout="this.style.transform='scale(1)';this.style.opacity='.85'">🗑</button>`:''}</div>`).join('')}</div>`:`<div class="empty-st"><div class="empty-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div><p>No photos yet.</p></div>`}
-  </div>`;},
-  upload(){document.getElementById('gfup').click()},
-  handleUpload(e){
-    const f=e.target.files[0];if(!f)return;
-    if(f.size>32*1024*1024){toast('Ảnh quá lớn! Tối đa 32MB ❌');e.target.value='';return}
-    const cap=prompt('Caption:','')||'A new memory';
-    toast('Đang tải ảnh lên... ⏳');
-    const reader=new FileReader();
-    reader.onload=ev=>{
-      const base64=ev.target.result.split(',')[1]; 
-      const body=new URLSearchParams();
-      body.append('key',IMGBB_API_KEY);
-      body.append('image',base64);
-      fetch('https://api.imgbb.com/1/upload',{
-        method:'POST',
-        headers:{'Content-Type':'application/x-www-form-urlencoded'},
-        body:body.toString()
-      })
-      .then(r=>r.json())
-      .then(result=>{
-        if(result.success){
-          if(!Array.isArray(S.photos))S.photos=Object.values(S.photos||{});
-          S.photos.push({id:Date.now(),url:result.data.url,cap:cap.trim(),by:S.user.name,date:new Date().toISOString().split('T')[0]});
-          S.save('photos',S.photos);Gallery.render();toast('Photo added! 📸');
-        }else{
-          const msg=result.error?.message||'Kiểm tra lại API key';
-          toast('ImgBB: '+msg+' ❌');
-          console.error('ImgBB error:',result);
-        }
-      })
-      .catch(err=>{console.error(err);toast('Lỗi kết nối! Thử lại ❌')});
-    };
-    reader.onerror=()=>toast('Không đọc được file ❌');
-    reader.readAsDataURL(f);
-    e.target.value='';
-  },
-  lbx(id){App.openOver('lbx',S.photos.find(x=>x.id===id))},
-  renderLbx(p){document.getElementById('m-lbx').innerHTML=`<div class="lbx-inner"><button class="lbx-x" onclick="App.back()">✕</button>${S.user?`<button class="lbx-del" onclick="Gallery.delete(${p.id})" title="Xoa anh">🗑️</button>`:''}<img class="lbx-img" src="${p.url}"><div class="lbx-cap">${p.cap} — ${p.by}</div></div>`},
-  delete(id){if(!confirm('Xoa buc anh nay?'))return;if(!Array.isArray(S.photos))S.photos=Object.values(S.photos||{});S.photos=S.photos.filter(x=>x.id!==id);S.save('photos',S.photos);const cur=S.stack[S.stack.length-1];if(cur==='lbx')App.back();else Gallery.render();toast('Photo deleted.')}
+  delete(id){if(confirm('Xóa bình chọn này?')){S.polls=S.polls.filter(p=>p.id!==id);S.save('polls',S.polls);Polls.render();toast('Đã xóa.')}}
 };
 
 // =====================================================
@@ -624,246 +651,162 @@ const Gallery = {
 const Visions = {
   render(){
     const el=document.getElementById('m-visions');const can=!!S.user;
-    el.innerHTML=`<div class="mh"><div class="mt">Visions</div><div class="mha">${can?`<button class="btn-s" onclick="Visions.toggleAdd()">${S.addPlanOpen?'✕ Cancel':'+ Add Vision'}</button>`:''}<button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
-    <div class="mb">${!can?`<div class="info-banner"><a onclick="App.open('auth')">Sign in</a> to add plans</div>`:''}
-    <div id="ap-cont">${S.addPlanOpen&&can?Visions.formHTML():''}</div>
-    <div class="ptl">${Visions.listHTML()}</div></div>`;
+    el.innerHTML=`<div class="mh"><div class="mt">Dự định</div><div class="mha">${can?`<button class="btn-s" onclick="Visions.toggleAdd()">${S.addPlanOpen?'✕ Hủy':'+ Thêm'}</button>`:''}<button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
+    <div class="mb">${!can?`<div class="info-banner"><a onclick="App.open('auth')">Đăng nhập</a> để thêm dự định</div>`:''}
+    <div id="ap-cont">${S.addPlanOpen&&can?this.formHTML():''}</div><div class="ptl">${this.listHTML()}</div></div>`;
   },
   formHTML(){
-    return`<div class="post-box" style="margin-bottom:24px">
-    <div class="post-box-title">🌟 A New Vision</div>
-    <div class="fg"><label class="fl">Title</label><input class="fi" id="ap-t" placeholder="What are we doing?"></div>
-    <div class="fg"><label class="fl">Type</label>
-      <div id="vis-type-btns" style="display:flex;gap:8px;flex-wrap:wrap">
-        ${VIS_TYPES.map(t=>`<button data-vtype="${t.key}" onclick="Visions.selectType('${t.key}')" style="padding:7px 14px;border:1px solid rgba(255,255,255,.1);border-radius:20px;background:rgba(255,255,255,.03);color:var(--tm);font-family:'Outfit',sans-serif;font-size:.8rem;cursor:pointer;transition:all .2s ease">${t.emoji} ${t.label}</button>`).join('')}
-      </div>
-    </div>
-    <div class="fg"><label class="fl">Date</label><input class="fi" id="ap-d" type="date"></div>
-    <div class="fg"><label class="fl">Description</label><textarea class="fta" id="ap-c" placeholder="Tell us more about this plan..."></textarea></div>
-    <button class="btn-p" onclick="Visions.add()">Add This Vision ✨</button></div>`;
+    return`<div class="post-box" style="margin-bottom:24px"><div class="post-box-title">🌟 Kế hoạch mới</div>
+    <div class="fg"><label class="fl">Tên sự kiện</label><input class="fi" id="ap-t"></div>
+    <div class="fg"><label class="fl">Phân loại</label><div style="display:flex;gap:8px;flex-wrap:wrap">${VIS_TYPES.map(t=>`<button data-vtype="${t.key}" onclick="Visions.selectType('${t.key}')" style="padding:7px 14px;border:1px solid rgba(255,255,255,.1);border-radius:20px;background:rgba(255,255,255,.03);color:var(--tm);cursor:pointer">${t.emoji} ${t.label}</button>`).join('')}</div></div>
+    <div class="fg"><label class="fl">Ngày dự kiến</label><input class="fi" id="ap-d" type="date"></div>
+    <div class="fg"><label class="fl">Mô tả thêm</label><textarea class="fta" id="ap-c"></textarea></div>
+    <button class="btn-p" onclick="Visions.add()">Lưu dự định ✨</button></div>`;
   },
   selectType(type){
     S.planType=type;
     document.querySelectorAll('[data-vtype]').forEach(b=>{
-      const t=VIS_TYPES.find(x=>x.key===b.dataset.vtype);
-      b.style.background=b.dataset.vtype===type?t.color:'rgba(255,255,255,.03)';
-      b.style.borderColor=b.dataset.vtype===type?'var(--pl)':'rgba(255,255,255,.1)';
-      b.style.color=b.dataset.vtype===type?'var(--txt)':'var(--tm)';
+      const isSel=b.dataset.vtype===type;
+      b.style.background=isSel?VIS_TYPES.find(x=>x.key===type).color:'rgba(255,255,255,.03)';
+      b.style.borderColor=isSel?'var(--pl)':'rgba(255,255,255,.1)'; b.style.color=isSel?'var(--txt)':'var(--tm)';
     });
   },
   listHTML(){
     const sorted=[...S.plans].sort((a,b)=>a.date.localeCompare(b.date));
-    if(!sorted.length)return`<div class="empty-st" style="padding-left:0"><div class="empty-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2L9.5 8.5 3 9.3l5 4.8-1.2 6.9L12 17.8l5.2 3.2-1.2-6.9 5-4.8-6.5-.8L12 2z"/></svg></div><p>No visions yet.<br>Add your first plan!</p></div>`;
+    if(!sorted.length)return`<div class="empty-st" style="padding-left:0"><p>Chưa có dự định nào.</p></div>`;
     return sorted.map(p=>{
       const ti=VIS_TYPES.find(t=>t.key===(p.type||'other'))||VIS_TYPES[4];
-      const d=new Date(p.date+'T00:00:00');
-      const ds=d.toLocaleDateString('en-US',{weekday:'short',month:'long',day:'numeric',year:'numeric'});
-      const isPast=d<new Date();
-      const canDel=!!S.user;
-      return`<div class="pi"><div class="pdot" style="${isPast?'background:var(--td)':''}"></div>
-        <div class="pc2">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-            <span style="font-size:1.3rem">${ti.emoji}</span>
-            <span class="p-title" style="margin:0;flex:1">${p.title}</span>
-            <span style="padding:3px 10px;background:${ti.color};border-radius:20px;font-size:.68rem;color:var(--pl);font-weight:600;flex-shrink:0">${ti.label}</span>
-          </div>
-          <div class="p-date">${ds}</div>
-          <div class="p-desc">${p.desc}</div>
-          ${p.parti&&p.parti.length?`<div class="p-parti">${p.parti.map(n=>`<span class="p-chip">${n}</span>`).join('')}</div>`:''}
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
-            <span class="p-by">Added by ${p.addedBy}</span>
-            ${canDel?`<button onclick="Visions.delete(${p.id})" style="padding:3px 10px;background:transparent;border:1px solid rgba(239,68,68,.3);border-radius:20px;color:rgba(239,68,68,.65);font-size:.7rem;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s" onmouseover="this.style.background='rgba(239,68,68,.1)'" onmouseout="this.style.background='transparent'">Delete</button>`:''}
-          </div>
-        </div></div>`;
+      const isPast=new Date(p.date)<new Date(); const canDel=!!S.user;
+      return`<div class="pi"><div class="pdot" style="${isPast?'background:var(--td)':''}"></div><div class="pc2">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><span style="font-size:1.3rem">${ti.emoji}</span><span class="p-title" style="margin:0;flex:1">${p.title}</span></div>
+        <div class="p-date">${formatDate(new Date(p.date).toISOString()).split(' ')[0]}</div><div class="p-desc">${p.desc}</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px"><span class="p-by">Tạo bởi ${p.addedBy}</span>${canDel?`<button onclick="Visions.delete(${p.id})" style="padding:3px 10px;background:transparent;border:1px solid rgba(239,68,68,.3);border-radius:20px;color:rgba(239,68,68,.65);font-size:.7rem;cursor:pointer;">Xóa</button>`:''}</div>
+      </div></div>`;
     }).join('');
   },
-  toggleAdd(){S.addPlanOpen=!S.addPlanOpen;document.getElementById('ap-cont').innerHTML=S.addPlanOpen?this.formHTML():'';const btn=document.querySelector('#m-visions .btn-s');if(btn)btn.textContent=S.addPlanOpen?'✕ Cancel':'+ Add Vision';if(S.addPlanOpen)setTimeout(()=>Visions.selectType('meetup'),10)},
+  toggleAdd(){S.addPlanOpen=!S.addPlanOpen;Visions.render();if(S.addPlanOpen)setTimeout(()=>Visions.selectType('meetup'),10)},
   add(){
-    const t=(document.getElementById('ap-t')||{}).value||'';const d=(document.getElementById('ap-d')||{}).value||'';
-    if(!t.trim()||!d){toast('Please fill in title and date.');return}
-    const plan={id:Date.now(),title:t.trim(),type:S.planType||'meetup',date:d,desc:((document.getElementById('ap-c')||{}).value||'').trim()||'No description.',addedBy:S.user.name,parti:[S.user.name],createdAt:new Date().toISOString()};
-    S.plans.push(plan);S.save('plans',S.plans);S.addPlanOpen=false;Visions.render();toast('Vision added! ✨');
+    const t=document.getElementById('ap-t').value, d=document.getElementById('ap-d').value;
+    if(!t.trim()||!d){toast('Điền đủ tên sự kiện và ngày.');return}
+    S.plans.push({id:Date.now(),title:t.trim(),type:S.planType||'meetup',date:d,desc:document.getElementById('ap-c').value.trim(),addedBy:S.user.name});
+    S.save('plans',S.plans);S.addPlanOpen=false;Visions.render();toast('Đã lưu dự định! ✨');
   },
-  delete(id){if(!confirm('Delete this vision?'))return;S.plans=S.plans.filter(p=>p.id!==id);S.save('plans',S.plans);Visions.render();toast('Vision removed.')}
+  delete(id){if(confirm('Xóa dự định này?')){S.plans=S.plans.filter(p=>p.id!==id);S.save('plans',S.plans);Visions.render();toast('Đã xóa.')}}
 };
 
 // =====================================================
 // CALENDAR
 // =====================================================
 const Cal = {
-  btypes:{meetup:'👥',travel:'✈️',event:'🎉',activity:'🎯',other:'📌'},
-  bcolors:{meetup:'rgba(139,92,246,.25)',travel:'rgba(16,185,129,.25)',event:'rgba(245,158,11,.25)',activity:'rgba(236,72,153,.25)',other:'rgba(255,255,255,.1)'},
-
-  render(){document.getElementById('m-calendar').innerHTML=`<div class="mh"><div class="mt">Calendar</div><button class="mbtn-x" onclick="App.closeAll()">✕</button></div><div class="mb">${Cal.bodyHTML()}</div>`},
-
+  render(){document.getElementById('m-calendar').innerHTML=`<div class="mh"><div class="mt">Lịch trình</div><button class="mbtn-x" onclick="App.closeAll()">✕</button></div><div class="mb">${this.bodyHTML()}</div>`},
   bodyHTML(){
-    const y=S.calYear,m=S.calMonth;
-    const mn=['January','February','March','April','May','June','July','August','September','October','November','December'];
-    const days=this.getDays(y,m);const today=new Date().toISOString().split('T')[0];
-    let grid=`<div class="cal-grid">`;
-    ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(d=>grid+=`<div class="cdh">${d}</div>`);
-    days.forEach(d=>{
-      if(d===null){grid+=`<div class="cd empty"></div>`;return}
+    const y=S.calYear, m=S.calMonth, mn=['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6','Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
+    const first=new Date(y,m,1).getDay(), count=new Date(y,m+1,0).getDate();
+    let grid=`<div class="cal-grid">`; ['CN','T2','T3','T4','T5','T6','T7'].forEach(d=>grid+=`<div class="cdh">${d}</div>`);
+    for(let i=0;i<first;i++) grid+=`<div class="cd empty"></div>`;
+    const today=new Date().toISOString().split('T')[0];
+    for(let d=1;d<=count;d++){
       const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
       const myAv=S.user&&S.avail[S.user.name]&&S.avail[S.user.name][ds];
-      const isPast=ds<today;const isSel=ds===S.selDay;
-      const avOthers=Object.entries(S.avail).filter(([n,v])=>(!S.user||n!==S.user.name)&&v[ds]).map(([n])=>n);
-      const dayBooks=(S.bookings||[]).filter(b=>b.date===ds);
-      let cls='cd';if(isPast)cls+=' past';if(ds===today)cls+=' today';if(myAv&&!isPast)cls+=' my-av';if(isSel)cls+=' selected';
-      const dots=avOthers.slice(0,2).map(n=>`<div class="cdd" style="background:${MEMBER_COLORS[n]||'#818CF8'}"></div>`).join('');
-      const bookDot=dayBooks.length?`<div class="cdd" style="background:rgba(255,255,255,.7)"></div>`:'';
-      grid+=`<div class="${cls}" onclick="Cal.selectDay('${ds}')"><div class="cd-num">${d}</div><div class="cd-dots">${dots}${myAv&&!isPast?`<div class="cdd" style="background:var(--amber)"></div>`:''}${bookDot}</div></div>`;
-    });
+      let cls='cd'; if(ds<today)cls+=' past'; if(ds===today)cls+=' today'; if(myAv&&ds>=today)cls+=' my-av'; if(ds===S.selDay)cls+=' selected';
+      grid+=`<div class="${cls}" onclick="Cal.selectDay('${ds}')"><div class="cd-num">${d}</div><div class="cd-dots">${myAv&&ds>=today?`<div class="cdd" style="background:var(--amber)"></div>`:''}</div></div>`;
+    }
     grid+=`</div>`;
-    const detail=S.selDay?this.dayDetail(S.selDay):`<div class="cal-info"><span style="color:var(--td)">Select a date to view details or book an event</span></div>`;
-    const upcoming=this.upcomingHTML();
-    return`
-    ${!S.user?`<div class="info-banner"><a onclick="App.open('auth')">Sign in</a> to mark availability & book events</div>`:
-    `<div style="font-size:.78rem;color:var(--td);margin-bottom:14px;padding:10px 14px;background:rgba(255,255,255,.03);border-radius:10px;border:1px solid rgba(255,255,255,.05)">Click a date to mark availability or book an event</div>`}
-    <div class="cal-hd"><button class="cal-nav" onclick="Cal.nav(-1)">‹</button><div class="cal-month">${mn[m]} ${y}</div><button class="cal-nav" onclick="Cal.nav(1)">›</button></div>
-    <div class="cal-legend"><div class="cl-item"><div class="cl-dot" style="background:var(--amber)"></div>You're free</div><div class="cl-item"><div class="cl-dot" style="background:rgba(255,255,255,.7)"></div>Booked</div></div>
-    ${grid}${detail}<div id="book-form-c"></div>${upcoming}`;
+    const detail=S.selDay?`<div class="cal-info"><div class="cal-info-date">${formatDate(new Date(S.selDay).toISOString()).split(' ')[0]}</div>${S.user&&S.selDay>=today?`<button class="btn-s" onclick="Cal.toggleAv('${S.selDay}')">${S.user&&S.avail[S.user.name]&&S.avail[S.user.name][S.selDay]?'✓ Bạn đang rảnh (Nhấn để hủy)':'📍 Đánh dấu bạn rảnh hôm nay'}</button>`:'Đăng nhập để đánh dấu rảnh'}</div>`:'<div class="cal-info" style="color:var(--td);text-align:center">Click vào một ngày để xem chi tiết</div>';
+    return `<div class="cal-hd"><button class="cal-nav" onclick="Cal.nav(-1)">‹</button><div class="cal-month">${mn[m]} năm ${y}</div><button class="cal-nav" onclick="Cal.nav(1)">›</button></div>${grid}${detail}`;
   },
-
-  dayDetail(ds){
-    const d=new Date(ds+'T00:00:00');const label=d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
-    const today=new Date().toISOString().split('T')[0];const isPast=ds<today;
-    const myAv=S.user&&S.avail[S.user.name]&&S.avail[S.user.name][ds];
-    const allFree=Object.entries(S.avail).filter(([n,v])=>v[ds]).map(([n])=>n);
-    const books=(S.bookings||[]).filter(b=>b.date===ds);
-    const avHTML=allFree.length?`<div style="margin-bottom:10px"><span style="font-size:.78rem;color:var(--tm)">Free: </span>${allFree.map(n=>`<span style="color:${n===S.user?.name?'var(--amber)':'var(--pl)'};font-weight:600;margin-right:6px;font-size:.82rem">${n}</span>`).join('')}</div>`:`<div style="color:var(--td);font-size:.8rem;margin-bottom:10px">Nobody marked as free yet.</div>`;
-    const booksHTML=books.length?books.map(b=>`<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.06);border-radius:10px;margin-bottom:7px"><div style="width:34px;height:34px;border-radius:9px;background:${this.bcolors[b.type]||this.bcolors.other};display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0">${this.btypes[b.type]||'📌'}</div><div style="flex:1"><div style="font-weight:600;color:var(--txt);font-size:.86rem">${b.title}</div><div style="color:var(--tm);font-size:.72rem">${b.time?b.time+' · ':''}by ${b.createdBy}</div></div>${!!S.user ? `<button onclick="Cal.deleteBooking(${b.id})" style="padding:2px 8px;background:transparent;border:1px solid rgba(239,68,68,.3);border-radius:20px;color:rgba(239,68,68,.6);font-size:.7rem;cursor:pointer;font-family:'Outfit',sans-serif" onmouseover="this.style.background='rgba(239,68,68,.1)'" onmouseout="this.style.background='transparent'">✕</button>`:''}</div>`).join(''):`<div style="color:var(--td);font-size:.8rem">No events booked for this day.</div>`;
-    const actions=!isPast&&S.user?`<div style="display:flex;gap:8px;margin-top:12px"><button class="btn-s" style="flex:1" onclick="Cal.toggleAv('${ds}')">${myAv?'✓ I\'m Free (click to remove)':'📍 Mark Me as Free'}</button><button style="flex:1;padding:9px 20px;background:var(--pd);border:1px solid var(--bdrh);border-radius:11px;color:var(--pl);font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:500;cursor:pointer;transition:var(--tr)" onmouseover="this.style.background='var(--pb)'" onmouseout="this.style.background='var(--pd)'" onclick="Cal.openBookForm('${ds}')">📌 Book Event</button></div>`:!S.user?`<button class="btn-p" style="margin-top:10px" onclick="App.open('auth')">Sign in to book or mark availability</button>`:'';
-    return`<div class="cal-info" style="margin-bottom:10px"><div class="cal-info-date">${label}</div>${avHTML}${booksHTML}${actions}</div>`;
-  },
-
-  openBookForm(ds){
-    document.getElementById('book-form-c').innerHTML=`<div class="post-box" style="margin-top:0">
-    <div class="post-box-title">📌 Book Event — ${ds}</div>
-    <div class="fg"><label class="fl">Event Title</label><input class="fi" id="bk-title" placeholder="e.g. Group Dinner, Study Session..."></div>
-    <div class="fg"><label class="fl">Time (optional)</label><input class="fi" id="bk-time" type="time"></div>
-    <div class="fg"><label class="fl">Type</label>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        ${Object.entries(this.btypes).map(([k,e])=>`<button data-btype="${k}" onclick="Cal.selectBType('${k}')" style="padding:6px 14px;border:1px solid rgba(255,255,255,.1);border-radius:20px;background:rgba(255,255,255,.03);color:var(--tm);font-family:'Outfit',sans-serif;font-size:.8rem;cursor:pointer;transition:all .2s">${e} ${k.charAt(0).toUpperCase()+k.slice(1)}</button>`).join('')}
-      </div>
-    </div>
-    <div class="fg"><label class="fl">Notes</label><textarea class="fta" id="bk-notes" style="min-height:60px" placeholder="Any details?"></textarea></div>
-    <div style="display:flex;gap:8px"><button class="btn-p" style="flex:2" onclick="Cal.saveBooking('${ds}')">Save Booking</button><button class="btn-s" style="flex:1" onclick="document.getElementById('book-form-c').innerHTML=''">Cancel</button></div>
-    </div>`;
-    S.bookType='meetup';Cal.selectBType('meetup');
-  },
-
-  selectBType(type){
-    S.bookType=type;
-    document.querySelectorAll('[data-btype]').forEach(b=>{
-      b.style.background=b.dataset.btype===type?this.bcolors[type]:'rgba(255,255,255,.03)';
-      b.style.borderColor=b.dataset.btype===type?'var(--pl)':'rgba(255,255,255,.1)';
-      b.style.color=b.dataset.btype===type?'var(--txt)':'var(--tm)';
-    });
-  },
-
-  saveBooking(ds){
-    const title=(document.getElementById('bk-title')||{}).value||'';if(!title.trim()){toast('Please add a title.');return}
-    const time=(document.getElementById('bk-time')||{}).value||'';const notes=(document.getElementById('bk-notes')||{}).value||'';
-    const booking={id:Date.now(),title:title.trim(),date:ds,time,type:S.bookType||'meetup',notes:notes.trim(),createdBy:S.user.name,createdAt:new Date().toISOString()};
-    if(!S.bookings)S.bookings=[];S.bookings.push(booking);S.save('bookings',S.bookings);
-    toast('Event booked! 📌');document.getElementById('book-form-c').innerHTML='';Cal.selectDay(ds);
-  },
-
-  deleteBooking(id){if(!confirm('Remove this booking?'))return;S.bookings=S.bookings.filter(b=>b.id!==id);S.save('bookings',S.bookings);Cal.selectDay(S.selDay);},
-
+  selectDay(ds){S.selDay=ds; document.querySelector('#m-calendar .mb').innerHTML=this.bodyHTML();},
   toggleAv(ds){
-    if(!S.user){toast('Sign in first.');return}
-    if(!S.avail[S.user.name])S.avail[S.user.name]={};
+    if(!S.user)return; if(!S.avail[S.user.name])S.avail[S.user.name]={};
     S.avail[S.user.name][ds]=!S.avail[S.user.name][ds];
     if(!S.avail[S.user.name][ds])delete S.avail[S.user.name][ds];
-    S.save('avail',S.avail);Cal.selectDay(ds);
+    S.save('avail',S.avail); this.selectDay(ds);
   },
-
-  selectDay(ds){S.selDay=ds;const mb=document.querySelector('#m-calendar .mb');if(mb)mb.innerHTML=Cal.bodyHTML()},
-
-  upcomingHTML(){
-    const today=new Date().toISOString().split('T')[0];
-    const up=(S.bookings||[]).filter(b=>b.date>=today).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,4);
-    if(!up.length)return'';
-    return`<div style="margin-top:18px"><div style="font-size:.72rem;font-weight:700;color:var(--td);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px">Upcoming Events</div>
-    ${up.map(b=>`<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04)">
-      <div style="width:44px;text-align:center;flex-shrink:0"><div style="font-size:.68rem;color:var(--tm)">${new Date(b.date+'T00:00').toLocaleDateString('en',{month:'short'})}</div><div style="font-size:1.2rem;font-weight:700;color:var(--txt);line-height:1">${new Date(b.date+'T00:00').getDate()}</div></div>
-      <div style="width:36px;height:36px;border-radius:9px;background:${this.bcolors[b.type]||this.bcolors.other};display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0">${this.btypes[b.type]||'📌'}</div>
-      <div style="flex:1;min-width:0"><div style="font-weight:600;color:var(--txt);font-size:.86rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.title}</div><div style="color:var(--tm);font-size:.72rem">${b.time||'All day'} · ${b.createdBy}</div></div>
-    </div>`).join('')}</div>`;
-  },
-
-  getDays(y,m){const first=new Date(y,m,1).getDay(),count=new Date(y,m+1,0).getDate(),arr=[];for(let i=0;i<first;i++)arr.push(null);for(let d=1;d<=count;d++)arr.push(d);return arr},
-  nav(dir){S.calMonth+=dir;if(S.calMonth>11){S.calMonth=0;S.calYear++}if(S.calMonth<0){S.calMonth=11;S.calYear--}S.selDay=null;const mb=document.querySelector('#m-calendar .mb');if(mb)mb.innerHTML=Cal.bodyHTML()}
+  nav(dir){S.calMonth+=dir;if(S.calMonth>11){S.calMonth=0;S.calYear++}if(S.calMonth<0){S.calMonth=11;S.calYear--}S.selDay=null;document.querySelector('#m-calendar .mb').innerHTML=this.bodyHTML();}
 };
 
 // =====================================================
-// PROFILE
+// PROFILE, CUSTOMIZATION & SPIRITUAL (Cập nhật Sửa Ngày Sinh)
 // =====================================================
 const Profile = {
+  colors: ['#8B5CF6', '#EC4899', '#F59E0B', '#10B981', '#3B82F6', '#EF4444', '#71717A'],
+  
   render(){
+    if(!S.user) return;
+    const data = S.userFullData || {};
+    const dob = data.dob || '';
+    const spiri = this.calcSpiri(dob);
+
     const el=document.getElementById('m-profile');
-    el.innerHTML=`<div class="mh"><div class="mt">Profile</div><button class="mbtn-x" onclick="App.closeAll()">✕</button></div>
-    <div class="mb">${!S.user?`<div class="empty-st"><p style="margin-bottom:16px">Please sign in to view your profile.</p><button class="btn-p" onclick="App.open('auth')">Sign In</button></div>`:
-    `<div style="text-align:center;padding:20px 0 30px">
-       <div class="avi" style="width:80px;height:80px;font-size:2rem;margin:0 auto 16px">${S.user.name.slice(0,2).toUpperCase()}</div>
-       <div style="font-family:'DM Serif Display',serif;font-size:1.5rem;color:var(--txt);margin-bottom:6px">${S.user.name}</div>
-       <div style="color:var(--tm);font-size:.85rem;margin-bottom:30px">${S.user.email}</div>
-       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:24px">
-         <div style="background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.05);border-radius:14px;padding:14px;text-align:center"><div style="font-size:1.5rem;font-weight:700;color:var(--pl)">${S.stories.filter(s=>s.author===S.user.name).length}</div><div style="font-size:.72rem;color:var(--tm)">Tales</div></div>
-         <div style="background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.05);border-radius:14px;padding:14px;text-align:center"><div style="font-size:1.5rem;font-weight:700;color:var(--amber)">${S.plans.filter(p=>p.addedBy===S.user.name).length}</div><div style="font-size:.72rem;color:var(--tm)">Visions</div></div>
-         <div style="background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.05);border-radius:14px;padding:14px;text-align:center"><div style="font-size:1.5rem;font-weight:700;color:var(--rose)">${S.polls.filter(p=>p.createdBy===S.user.name).length}</div><div style="font-size:.72rem;color:var(--tm)">Polls</div></div>
-       </div>
-       <button class="btn-s" style="width:100%" onclick="Auth.out();App.closeAll()">Sign Out</button>
-     </div>`}
+    el.innerHTML=`<div class="mh"><div class="mt">Cá nhân</div><div class="mha"><button class="btn-s" onclick="Profile.save()">Lưu thay đổi</button><button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
+    <div class="mb">
+      <div class="fg"><label class="fl">Màu Avatar</label>
+        <div class="color-picker">${this.colors.map(c=>`<div class="color-dot ${data.avatarColor===c?'active':''}" style="background:${c}" onclick="Profile.setColor(this,'${c}')"></div>`).join('')}</div>
+      </div>
+      <div class="fg"><label class="fl">Trạng thái (Status)</label><input class="fi" id="p-status" value="${data.status||''}" placeholder="Hôm nay bạn thế nào?"></div>
+      
+      <div class="fg"><label class="fl">Cập nhật Ngày sinh</label><input class="fi" id="p-dob" type="date" value="${dob}"></div>
+      
+      <div style="height:1px; background:rgba(255,255,255,0.05); margin:25px 0"></div>
+
+      <div class="spiri-section">
+        <div class="comment-title" style="text-align:center; color:var(--pl); margin-bottom:15px">✨ Góc Tâm Linh</div>
+        ${dob ? `
+          <div class="spiri-grid">
+            <div class="spiri-item"><div class="spiri-val">${spiri.days}</div><div class="spiri-lbl">Ngày đến Sinh nhật</div></div>
+            <div class="spiri-item"><div class="spiri-val zodiac-emoji">${spiri.zodiac.emoji}</div><div class="spiri-lbl">Cung ${spiri.zodiac.name}</div></div>
+          </div>
+        ` : `<div style="color:var(--td); text-align:center; font-size:0.85rem">Hãy nhập ngày sinh ở trên để tính Cung Hoàng Đạo nhé!</div>`}
+      </div>
     </div>`;
+  },
+  calcSpiri(dobStr) {
+    if(!dobStr) return { days: '?', zodiac: {name:'?', emoji:'❓'} };
+    const b = new Date(dobStr), now = new Date();
+    let nb = new Date(now.getFullYear(), b.getMonth(), b.getDate());
+    if (nb < now) nb.setFullYear(now.getFullYear() + 1);
+    const days = Math.ceil((nb - now) / 86400000);
+    const z=[{n:'Ma Kết',e:'♑',m:1,d:20},{n:'Bảo Bình',e:'♒',m:2,d:19},{n:'Song Ngư',e:'♓',m:3,d:20},{n:'Bạch Dương',e:'♈',m:4,d:20},{n:'Kim Ngưu',e:'♉',m:5,d:21},{n:'Song Tử',e:'♊',m:6,d:21},{n:'Cự Giải',e:'♋',m:7,d:23},{n:'Sư Tử',e:'♌',m:8,d:23},{n:'Xử Nữ',e:'♍',m:9,d:23},{n:'Thiên Bình',e:'♎',m:10,d:23},{n:'Bọ Cạp',e:'♏',m:11,d:22},{n:'Nhân Mã',e:'♐',m:12,d:22},{n:'Ma Kết',e:'♑',m:13,d:100}];
+    const zodiac = z.find(x => (b.getMonth()+1 < x.m) || (b.getMonth()+1 === x.m && b.getDate() <= x.d)) || z[0];
+    return { days: days===365?'Hôm nay!':days, zodiac:{name:zodiac.n, emoji:zodiac.e} };
+  },
+  setColor(el, c){ document.querySelectorAll('.color-dot').forEach(d=>d.classList.remove('active')); el.classList.add('active'); S.selColor = c; },
+  save(){
+    const st = document.getElementById('p-status').value;
+    const dob = document.getElementById('p-dob').value;
+    const c = S.selColor || S.userFullData?.avatarColor || '#8B5CF6';
+    
+    fbDB.ref('data/users/'+S.user.uid).update({ status: st.trim() || 'Đang trực tuyến', avatarColor: c, dob: dob })
+      .then(()=>{ toast('Đã cập nhật Cá nhân! ✨'); App.updateAuth(); Profile.render(); });
   }
 };
 
 // =====================================================
-// TOAST
+// DATA SYNC & BOOT
 // =====================================================
-let toastT;
-function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('on'),2800)}
-
-// =====================================================
-// FIREBASE REAL-TIME SYNC & AUTH LISTENER
-// =====================================================
-function initFirebaseSync(){
-  if(!fbDB) return;
-  ['stories','photos','plans','polls','bookings','avail'].forEach(key=>{
-    DB.subscribe(key,val=>{
-      if(val===null)return;
-      const cur=S.stack[S.stack.length-1];
-      S[key]=val;
-      if(cur&&document.activeElement&&!document.activeElement.classList.contains('fi')&&!document.activeElement.classList.contains('fta')){
-        const el=document.getElementById('m-'+cur);
-        if(el&&el.classList.contains('on'))App.render(cur);
-      }
-    });
-  });
+function renderCurrentModal() {
+  const cur=S.stack[S.stack.length-1];
+  if(cur && document.getElementById('m-'+cur).classList.contains('on')){
+    if(document.activeElement && document.activeElement.tagName === 'TEXTAREA') return;
+    if(cur==='story' && S.stories.length) App.render(cur, S.stories.find(x=>document.getElementById('m-story').innerHTML.includes(x.title))?.id);
+    else if(cur==='lbx' && S.photos.length) App.render(cur, S.photos.find(x=>document.getElementById('m-lbx').innerHTML.includes(x.url))?.id);
+    else App.render(cur);
+  }
 }
 
-// =====================================================
-// BOOT
-// =====================================================
-S.load();
-if (fbAuth) {
-  fbAuth.onAuthStateChanged(user => {
-    if (user) {
-      S.user = { name: user.displayName || user.email.split('@')[0], email: user.email };
-      localStorage.setItem('wx_user', JSON.stringify(S.user));
-    } else {
-      S.user = null;
-      localStorage.removeItem('wx_user');
-    }
-    App.updateAuth();
-  });
-} else {
-  App.updateAuth();
-}
-initFirebaseSync();
+DB.subscribe('stories', val => { S.stories = val ? Object.values(val) : []; renderCurrentModal(); });
+DB.subscribe('photos', val => { S.photos = val ? Object.values(val) : []; renderCurrentModal(); });
+DB.subscribe('polls', val => { S.polls = val ? Object.values(val) : []; renderCurrentModal(); });
+DB.subscribe('plans', val => { S.plans = val ? Object.values(val) : []; renderCurrentModal(); });
+DB.subscribe('avail', val => { S.avail = val || {}; renderCurrentModal(); });
+DB.subscribe('comments', val => { S.comments = val; renderCurrentModal(); });
+
+fbAuth.onAuthStateChanged(user => {
+  if (user) {
+    S.user = { uid: user.uid, name: user.displayName, email: user.email };
+    fbDB.ref('data/users/'+user.uid).on('value', snap => { S.userFullData = snap.val(); App.updateAuth(); });
+  } else { S.user = null; S.userFullData = null; App.updateAuth(); }
+});
 </script>
 </body>
 </html>
