@@ -180,6 +180,8 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:c
 .lbx-cap{margin-top:16px;color:var(--txt);font-family:'DM Serif Display',serif;font-size:1.1rem}
 .lbx-x{position:absolute;top:-52px;right:0;width:40px;height:40px;border:1px solid rgba(255,255,255,.2);border-radius:50%;background:rgba(0,0,0,.6);color:#fff;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--tr)}
 .lbx-x:hover{border-color:var(--rose);color:var(--rose)}
+.lbx-del{position:absolute;top:-52px;left:0;width:40px;height:40px;border:1px solid rgba(239,68,68,.3);border-radius:50%;background:rgba(0,0,0,.6);color:#FCA5A5;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--tr)}
+.lbx-del:hover{border-color:#EF4444;color:#EF4444;background:rgba(239,68,68,.2)}
 .empty-st{text-align:center;padding:40px 20px;color:var(--tm)}
 .empty-ic{width:60px;height:60px;border-radius:16px;background:rgba(255,255,255,.03);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:var(--td);border:1px dashed rgba(255,255,255,.1)}
 .empty-ic svg{width:28px;height:28px}
@@ -426,7 +428,8 @@ const Polls = {
     return S.polls.slice().reverse().map(poll=>{
       const total=poll.options.reduce((s,o)=>s+(o.voters?o.voters.length:0),0);
       const myVote=S.user?poll.options.findIndex(o=>o.voters&&o.voters.includes(S.user.name)):-1;
-      const canDel=S.user&&poll.createdBy===S.user.name;
+      // BẤT KỲ AI ĐĂNG NHẬP ĐỀU ĐƯỢC XÓA
+      const canDel=!!S.user;
       return`<div style="background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:20px;margin-bottom:14px">
         <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:14px">
           <div><div style="font-family:'DM Serif Display',serif;font-size:1.08rem;color:var(--txt);margin-bottom:4px">${poll.question}</div>
@@ -468,7 +471,7 @@ const Polls = {
 };
 
 // =====================================================
-// STORIES 
+// STORIES
 // =====================================================
 const Stories = {
   render(){
@@ -497,7 +500,8 @@ const Stories = {
       const liked = S.user && likedBy.includes(S.user.name);
       const tags = s.tags || [];
       const content = s.content || '';
-      const canDel = S.user && author === S.user.name;
+      // BẤT KỲ AI ĐĂNG NHẬP ĐỀU ĐƯỢC XÓA
+      const canDel = !!S.user;
 
       return`<div class="story-card" onclick="Stories.detail(${s.id})">
         <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:10px">
@@ -555,10 +559,10 @@ const Stories = {
 };
 
 // =====================================================
-// GALLERY (CẬP NHẬT TÍCH HỢP IMGBB API - DUNG LƯỢNG KHÔNG GIỚI HẠN)
+// GALLERY (ĐÃ THÊM TÍNH NĂNG XÓA API IMGBB)
 // =====================================================
 
-// BẠN HÃY DÁN API KEY CỦA IMGBB VÀO GIỮA 2 DẤU NGOẶC KÉP Ở DÒNG DƯỚI ĐÂY NHÉ:
+// BẠN HÃY DÁN API KEY CỦA IMGBB VÀO DÒNG DƯỚI ĐÂY NHÉ:
 const IMGBB_API_KEY = "DÁN_API_KEY_CỦA_BẠN_VÀO_ĐÂY";
 
 const Gallery = {
@@ -571,59 +575,54 @@ const Gallery = {
   
   handleUpload(e){
     const f=e.target.files[0];if(!f)return;
-    
     if(IMGBB_API_KEY === "DÁN_API_KEY_CỦA_BẠN_VÀO_ĐÂY") {
       alert("Hãy dán API Key của ImgBB vào code trước nhé!");
       return;
     }
-
     const cap=prompt('Caption:','')||'A new memory';
     toast('Đang tải ảnh lên ImgBB... ⏳');
     
     const formData = new FormData();
     formData.append('image', f);
 
-    // Gửi ảnh sang server của ImgBB
-    fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
-      method: 'POST',
-      body: formData
-    })
+    fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: formData })
     .then(response => response.json())
     .then(result => {
       if(result.success) {
-        const url = result.data.url; // Lấy link ảnh trực tiếp từ ImgBB
-        
+        const url = result.data.url;
         if(!Array.isArray(S.photos)) S.photos = Object.values(S.photos || {});
-        
-        // Lưu URL rút gọn vào Firebase Database của bạn
-        S.photos.push({
-          id: Date.now(),
-          url: url,
-          cap: cap.trim(),
-          by: S.user.name,
-          date: new Date().toISOString().split('T')[0]
-        });
-        
+        S.photos.push({ id: Date.now(), url: url, cap: cap.trim(), by: S.user.name, date: new Date().toISOString().split('T')[0] });
         S.save('photos', S.photos);
         Gallery.render();
         toast('Photo added! 📸');
-      } else {
-        toast('Lỗi khi tải ảnh lên ImgBB! ❌');
-      }
+      } else { toast('Lỗi khi tải ảnh lên ImgBB! ❌'); }
     })
-    .catch(err => {
-      console.error(err);
-      toast('Lỗi kết nối mạng! ❌');
-    });
+    .catch(err => { console.error(err); toast('Lỗi kết nối mạng! ❌'); });
 
     e.target.value='';
   },
   lbx(id){App.openOver('lbx',S.photos.find(x=>x.id===id))},
-  renderLbx(p){document.getElementById('m-lbx').innerHTML=`<div class="lbx-inner"><button class="lbx-x" onclick="App.back()">✕</button><img class="lbx-img" src="${p.url}"><div class="lbx-cap">${p.cap} — ${p.by}</div></div>`}
+  renderLbx(p){
+    // BẤT KỲ AI ĐĂNG NHẬP ĐỀU ĐƯỢC XÓA ẢNH
+    document.getElementById('m-lbx').innerHTML=`<div class="lbx-inner">
+      <button class="lbx-x" onclick="App.back()">✕</button>
+      ${!!S.user ? `<button class="lbx-del" onclick="Gallery.delete(${p.id})">🗑️</button>` : ''}
+      <img class="lbx-img" src="${p.url}"><div class="lbx-cap">${p.cap} — ${p.by}</div>
+    </div>`
+  },
+  delete(id){
+    if(!confirm('Xóa bức ảnh này nhé?')) return;
+    if(!Array.isArray(S.photos)) S.photos = Object.values(S.photos || {});
+    S.photos = S.photos.filter(x => x.id !== id);
+    S.save('photos', S.photos);
+    App.back();
+    Gallery.render();
+    toast('Photo deleted. 🗑️');
+  }
 };
 
 // =====================================================
-// VISIONS — with add plan form
+// VISIONS
 // =====================================================
 const Visions = {
   render(){
@@ -663,7 +662,8 @@ const Visions = {
       const d=new Date(p.date+'T00:00:00');
       const ds=d.toLocaleDateString('en-US',{weekday:'short',month:'long',day:'numeric',year:'numeric'});
       const isPast=d<new Date();
-      const canDel=S.user&&S.user.name===p.addedBy;
+      // BẤT KỲ AI ĐĂNG NHẬP ĐỀU ĐƯỢC XÓA
+      const canDel=!!S.user;
       return`<div class="pi"><div class="pdot" style="${isPast?'background:var(--td)':''}"></div>
         <div class="pc2">
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
@@ -692,7 +692,7 @@ const Visions = {
 };
 
 // =====================================================
-// CALENDAR — with availability + booking
+// CALENDAR
 // =====================================================
 const Cal = {
   btypes:{meetup:'👥',travel:'✈️',event:'🎉',activity:'🎯',other:'📌'},
@@ -736,7 +736,8 @@ const Cal = {
     const allFree=Object.entries(S.avail).filter(([n,v])=>v[ds]).map(([n])=>n);
     const books=(S.bookings||[]).filter(b=>b.date===ds);
     const avHTML=allFree.length?`<div style="margin-bottom:10px"><span style="font-size:.78rem;color:var(--tm)">Free: </span>${allFree.map(n=>`<span style="color:${n===S.user?.name?'var(--amber)':'var(--pl)'};font-weight:600;margin-right:6px;font-size:.82rem">${n}</span>`).join('')}</div>`:`<div style="color:var(--td);font-size:.8rem;margin-bottom:10px">Nobody marked as free yet.</div>`;
-    const booksHTML=books.length?books.map(b=>`<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.06);border-radius:10px;margin-bottom:7px"><div style="width:34px;height:34px;border-radius:9px;background:${this.bcolors[b.type]||this.bcolors.other};display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0">${this.btypes[b.type]||'📌'}</div><div style="flex:1"><div style="font-weight:600;color:var(--txt);font-size:.86rem">${b.title}</div><div style="color:var(--tm);font-size:.72rem">${b.time?b.time+' · ':''}by ${b.createdBy}</div></div>${S.user&&b.createdBy===S.user.name?`<button onclick="Cal.deleteBooking(${b.id})" style="padding:2px 8px;background:transparent;border:1px solid rgba(239,68,68,.3);border-radius:20px;color:rgba(239,68,68,.6);font-size:.7rem;cursor:pointer;font-family:'Outfit',sans-serif" onmouseover="this.style.background='rgba(239,68,68,.1)'" onmouseout="this.style.background='transparent'">✕</button>`:''}</div>`).join(''):`<div style="color:var(--td);font-size:.8rem">No events booked for this day.</div>`;
+    // BẤT KỲ AI ĐĂNG NHẬP ĐỀU ĐƯỢC XÓA BOOKING
+    const booksHTML=books.length?books.map(b=>`<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.06);border-radius:10px;margin-bottom:7px"><div style="width:34px;height:34px;border-radius:9px;background:${this.bcolors[b.type]||this.bcolors.other};display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0">${this.btypes[b.type]||'📌'}</div><div style="flex:1"><div style="font-weight:600;color:var(--txt);font-size:.86rem">${b.title}</div><div style="color:var(--tm);font-size:.72rem">${b.time?b.time+' · ':''}by ${b.createdBy}</div></div>${!!S.user ? `<button onclick="Cal.deleteBooking(${b.id})" style="padding:2px 8px;background:transparent;border:1px solid rgba(239,68,68,.3);border-radius:20px;color:rgba(239,68,68,.6);font-size:.7rem;cursor:pointer;font-family:'Outfit',sans-serif" onmouseover="this.style.background='rgba(239,68,68,.1)'" onmouseout="this.style.background='transparent'">✕</button>`:''}</div>`).join(''):`<div style="color:var(--td);font-size:.8rem">No events booked for this day.</div>`;
     const actions=!isPast&&S.user?`<div style="display:flex;gap:8px;margin-top:12px"><button class="btn-s" style="flex:1" onclick="Cal.toggleAv('${ds}')">${myAv?'✓ I\'m Free (click to remove)':'📍 Mark Me as Free'}</button><button style="flex:1;padding:9px 20px;background:var(--pd);border:1px solid var(--bdrh);border-radius:11px;color:var(--pl);font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:500;cursor:pointer;transition:var(--tr)" onmouseover="this.style.background='var(--pb)'" onmouseout="this.style.background='var(--pd)'" onclick="Cal.openBookForm('${ds}')">📌 Book Event</button></div>`:!S.user?`<button class="btn-p" style="margin-top:10px" onclick="App.open('auth')">Sign in to book or mark availability</button>`:'';
     return`<div class="cal-info" style="margin-bottom:10px"><div class="cal-info-date">${label}</div>${avHTML}${booksHTML}${actions}</div>`;
   },
