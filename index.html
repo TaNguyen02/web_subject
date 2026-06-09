@@ -11,6 +11,7 @@
 <script type="module" src="https://unpkg.com/@splinetool/viewer@1.12.97/build/spline-viewer.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -243,7 +244,7 @@ header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:c
 
 <script>
 // =====================================================
-// FIREBASE CẤU HÌNH ĐÃ ĐƯỢC CHUẨN HÓA
+// FIREBASE CẤU HÌNH ĐÃ ĐƯỢC CHUẨN HÓA & AUTH
 // =====================================================
 const FIREBASE_ENABLED = true;
 const FIREBASE_CONFIG = {
@@ -254,15 +255,17 @@ const FIREBASE_CONFIG = {
 };
 
 let fbDB = null;
+let fbAuth = null;
 if (FIREBASE_ENABLED) {
   try { 
     firebase.initializeApp(FIREBASE_CONFIG); 
     fbDB = firebase.database(); 
+    fbAuth = firebase.auth();
   }
   catch(e) { console.warn('Firebase error:', e); }
 }
 
-// DB Abstraction — tự chọn Firebase hoặc localStorage
+// DB Abstraction
 const DB = {
   save(key, val) {
     if (fbDB) fbDB.ref('data/'+key).set(val).catch(()=>{});
@@ -287,21 +290,12 @@ const DB = {
 // DEFAULT DATA
 // =====================================================
 const DEF_STORIES = [];
-const DEF_AV = {};
-const MEMBER_COLORS = {};
 const VIS_TYPES = [
   {key:'meetup',emoji:'👥',label:'Meetup',color:'rgba(139,92,246,.2)'},
   {key:'travel',emoji:'✈️',label:'Travel',color:'rgba(16,185,129,.2)'},
   {key:'event', emoji:'🎉',label:'Event', color:'rgba(245,158,11,.2)'},
   {key:'activity',emoji:'🎯',label:'Activity',color:'rgba(236,72,153,.2)'},
   {key:'other', emoji:'💡',label:'Other', color:'rgba(255,255,255,.08)'}
-];
-const BOOK_TYPES = [
-  {key:'meetup',emoji:'👥',color:'rgba(139,92,246,.25)'},
-  {key:'travel',emoji:'✈️',color:'rgba(16,185,129,.25)'},
-  {key:'event', emoji:'🎉',color:'rgba(245,158,11,.25)'},
-  {key:'activity',emoji:'🎯',color:'rgba(236,72,153,.25)'},
-  {key:'other', emoji:'📌',color:'rgba(255,255,255,.1)'}
 ];
 
 // =====================================================
@@ -314,17 +308,15 @@ const S = {
   authMode:'signin', bookType:'meetup', planType:'meetup',
   load() {
     try {
-      this.user = JSON.parse(localStorage.getItem('wx_user')||'null');
       this.stories  = DB.load('stories',  [...DEF_STORIES]);
       this.photos   = DB.load('photos',   []);
       this.plans    = DB.load('plans',    []);
       this.polls    = DB.load('polls',    []);
       this.bookings = DB.load('bookings', []);
       this.avail    = DB.load('avail',    {});
-    } catch(e) { this.stories=[...DEF_STORIES]; this.photos=[]; this.plans=[]; this.polls=[]; this.bookings=[]; this.avail={}; }
+    } catch(e) { this.stories=[]; this.photos=[]; this.plans=[]; this.polls=[]; this.bookings=[]; this.avail={}; }
   },
-  save(k,v) { this[k]=v; DB.save(k,v); },
-  setUser(u) { this.user=u; u?localStorage.setItem('wx_user',JSON.stringify(u)):localStorage.removeItem('wx_user'); App.updateAuth(); }
+  save(k,v) { this[k]=v; DB.save(k,v); }
 };
 
 // =====================================================
@@ -349,13 +341,18 @@ const App = {
   },
   updateAuth() {
     const a=document.getElementById('auth-area');
-    if(S.user) { const ini=S.user.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(); a.innerHTML=`<div class="user-pill"><div class="avi">${ini}</div><span class="u-name">${S.user.name}</span><button class="btn-so" onclick="Auth.out()">Sign out</button></div>`; }
-    else { a.innerHTML=`<button class="btn-si" onclick="App.open('auth')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Sign In</button>`; }
+    if(S.user) { 
+      const ini=S.user.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(); 
+      a.innerHTML=`<div class="user-pill"><div class="avi">${ini}</div><span class="u-name">${S.user.name}</span><button class="btn-so" onclick="Auth.out()">Sign out</button></div>`; 
+    }
+    else { 
+      a.innerHTML=`<button class="btn-si" onclick="App.open('auth')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Sign In</button>`; 
+    }
   }
 };
 
 // =====================================================
-// AUTH
+// AUTH (SỬ DỤNG FIREBASE AUTHENTICATION)
 // =====================================================
 const Auth = {
   render() {
@@ -364,43 +361,57 @@ const Auth = {
     <div class="mb">
       <div class="atabs"><button class="atab ${m==='signin'?'on':''}" onclick="Auth.setMode('signin')">Sign In</button><button class="atab ${m==='register'?'on':''}" onclick="Auth.setMode('register')">Create Account</button></div>
       <div id="auth-err" class="err"></div>
-      <button class="gbtn" onclick="Auth.google()"><svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.9 0 6.6 1.7 8.1 3.1l6-5.8C34.2 3.5 29.5 1.5 24 1.5 14.8 1.5 7 7.2 3.7 15.3l7 5.4C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.6H24v8.7h12.5c-.5 2.8-2.1 5.1-4.5 6.7l7 5.4c4.1-3.8 6.5-9.4 6.5-16.2z"/><path fill="#FBBC05" d="M10.8 28.3c-.5-1.5-.7-3-.7-4.6s.3-3.2.7-4.6l-7-5.4C2.3 16.6 1.5 20.2 1.5 24s.8 7.4 2.3 10.3l7-5.4v.4z"/><path fill="#34A853" d="M24 46.5c5.5 0 10.1-1.8 13.5-4.9l-7-5.4c-1.9 1.3-4.3 2-6.5 2-6.3 0-11.6-4.1-13.3-9.9l-7 5.4C7 40.8 14.8 46.5 24 46.5z"/></svg>Quick Demo Login</button>
-      <div class="gdiv">or use email</div>
-      ${m==='register'?`<div class="fg"><label class="fl">Display Name</label><input class="fi" id="a-name" placeholder="Your name"></div>`:''}
+      
+      ${m==='register'?`<div class="fg"><label class="fl">Tên hiển thị</label><input class="fi" id="a-name" placeholder="Tên của bạn"></div>`:''}
       <div class="fg"><label class="fl">Email</label><input class="fi" id="a-email" placeholder="you@email.com" type="email"></div>
-      <div class="fg"><label class="fl">Password</label><input class="fi" id="a-pass" placeholder="Min 6 characters" type="password" onkeydown="if(event.key==='Enter')Auth.submit()"></div>
-      ${m==='register'?`<div class="fg"><label class="fl">Confirm Password</label><input class="fi" id="a-pass2" placeholder="Repeat password" type="password" onkeydown="if(event.key==='Enter')Auth.submit()"></div>`:''}
-      <button class="btn-p" onclick="Auth.submit()">${m==='signin'?'Sign In →':'Create Account →'}</button>
-      <p class="hint">${m==='signin'?`No account? <a onclick="Auth.setMode('register')">Create one</a>`:`Have one? <a onclick="Auth.setMode('signin')">Sign in</a>`}</p>
+      <div class="fg"><label class="fl">Mật khẩu</label><input class="fi" id="a-pass" placeholder="Min 6 characters" type="password" onkeydown="if(event.key==='Enter')Auth.submit()"></div>
+      ${m==='register'?`<div class="fg"><label class="fl">Xác nhận mật khẩu</label><input class="fi" id="a-pass2" placeholder="Repeat password" type="password" onkeydown="if(event.key==='Enter')Auth.submit()"></div>`:''}
+      
+      <button class="btn-p" onclick="Auth.submit()">${m==='signin'?'Đăng nhập →':'Tạo tài khoản →'}</button>
+      <p class="hint">${m==='signin'?`Chưa có tài khoản? <a onclick="Auth.setMode('register')">Đăng ký ngay</a>`:`Đã có tài khoản? <a onclick="Auth.setMode('signin')">Đăng nhập</a>`}</p>
     </div>`;
   },
   setMode(m){S.authMode=m;Auth.render()},
-  google(){const n=prompt('Enter your display name:','');if(!n||!n.trim())return;S.setUser({name:n.trim(),email:n.trim().toLowerCase().replace(/\s/g,'_')+'@demo.com'});App.closeAll();toast(`Welcome, ${S.user.name}! 🚀`)},
   submit(){
     const err=s=>{const e=document.getElementById('auth-err');e.textContent=s;e.classList.add('on')};
     document.getElementById('auth-err').classList.remove('on');
+    
     const email=(document.getElementById('a-email')||{}).value||'';
     const pass=(document.getElementById('a-pass')||{}).value||'';
-    if(!email||!pass){err('Please fill in all fields.');return}
-    if(pass.length<6){err('Password must be at least 6 characters.');return}
-    const accs=JSON.parse(localStorage.getItem('wx_accounts')||'{}');
+    
+    if(!email||!pass){err('Vui lòng điền đầy đủ thông tin.');return}
+    if(pass.length<6){err('Mật khẩu phải từ 6 ký tự trở lên.');return}
+    
     if(S.authMode==='register'){
       const name=(document.getElementById('a-name')||{}).value||'';
       const pass2=(document.getElementById('a-pass2')||{}).value||'';
-      if(!name.trim()){err('Please enter your name.');return}
-      if(pass!==pass2){err('Passwords do not match.');return}
-      if(accs[email]){err('Email already registered.');return}
-      accs[email]={name:name.trim(),pass};
-      localStorage.setItem('wx_accounts',JSON.stringify(accs));
-      S.setUser({name:name.trim(),email});
-    }else{
-      if(!accs[email]){err('No account found. Create one first.');return}
-      if(accs[email].pass!==pass){err('Incorrect password.');return}
-      S.setUser({name:accs[email].name,email});
+      if(!name.trim()){err('Vui lòng nhập tên hiển thị.');return}
+      if(pass!==pass2){err('Mật khẩu không khớp.');return}
+      
+      toast('Đang tạo tài khoản... ⏳');
+      fbAuth.createUserWithEmailAndPassword(email, pass)
+        .then(cred => {
+          return cred.user.updateProfile({ displayName: name.trim() });
+        })
+        .then(() => {
+          App.closeAll(); 
+          toast('Tạo tài khoản thành công! 🎉');
+        })
+        .catch(error => { err('Lỗi: ' + error.message); });
+        
+    } else {
+      toast('Đang đăng nhập... ⏳');
+      fbAuth.signInWithEmailAndPassword(email, pass)
+        .then(() => {
+          App.closeAll(); 
+          toast('Đăng nhập thành công! 🎉');
+        })
+        .catch(error => { err('Sai email hoặc mật khẩu!'); });
     }
-    App.closeAll();toast(`Welcome, ${S.user.name}! 🚀`);
   },
-  out(){S.setUser(null);toast('Signed out.')}
+  out(){
+    fbAuth.signOut().then(() => toast('Đã đăng xuất. 👋'));
+  }
 };
 
 // =====================================================
@@ -557,7 +568,7 @@ const Stories = {
 };
 
 // =====================================================
-// GALLERY (ĐÃ THÊM API MỚI VÀ HÀM CỦA BẠN)
+// GALLERY 
 // =====================================================
 const IMGBB_API_KEY = "b88d79b88ecd08ee95927cabcad04ecf";
 
@@ -570,15 +581,12 @@ const Gallery = {
   upload(){document.getElementById('gfup').click()},
   handleUpload(e){
     const f=e.target.files[0];if(!f)return;
-    // Kiểm tra dung lượng (giới hạn ImgBB 32MB)
     if(f.size>32*1024*1024){toast('Ảnh quá lớn! Tối đa 32MB ❌');e.target.value='';return}
     const cap=prompt('Caption:','')||'A new memory';
     toast('Đang tải ảnh lên... ⏳');
-    // Đọc file thành base64 — ImgBB yêu cầu định dạng này
     const reader=new FileReader();
     reader.onload=ev=>{
-      const base64=ev.target.result.split(',')[1]; // bỏ phần "data:image/...;base64,"
-      // Gửi dạng URL-encoded (ổn định hơn FormData với ImgBB)
+      const base64=ev.target.result.split(',')[1]; 
       const body=new URLSearchParams();
       body.append('key',IMGBB_API_KEY);
       body.append('image',base64);
@@ -820,7 +828,7 @@ let toastT;
 function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('on'),2800)}
 
 // =====================================================
-// FIREBASE REAL-TIME SYNC
+// FIREBASE REAL-TIME SYNC & AUTH LISTENER
 // =====================================================
 function initFirebaseSync(){
   if(!fbDB) return;
@@ -841,9 +849,21 @@ function initFirebaseSync(){
 // BOOT
 // =====================================================
 S.load();
-App.updateAuth(); 
+if (fbAuth) {
+  fbAuth.onAuthStateChanged(user => {
+    if (user) {
+      S.user = { name: user.displayName || user.email.split('@')[0], email: user.email };
+      localStorage.setItem('wx_user', JSON.stringify(S.user));
+    } else {
+      S.user = null;
+      localStorage.removeItem('wx_user');
+    }
+    App.updateAuth();
+  });
+} else {
+  App.updateAuth();
+}
 initFirebaseSync();
 </script>
 </body>
 </html>
-"Tân, Hồng, Trang, Quyết"
