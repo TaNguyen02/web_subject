@@ -14,50 +14,55 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
-  /* Đã làm sáng màu nền: Từ đen tuyền sang Xanh Navy đậm, sang trọng hơn */
-  --bg:#111526; 
-  --s1:#1A1F35;--s2:#232A45;
-  --p:#8B5CF6;--pl:#A78BFA;--pd:rgba(139,92,246,.15);--pb:rgba(139,92,246,.25);
-  --amber:#F59E0B;--al:#FCD34D;--ad:rgba(245,158,11,.15);
-  --rose:#EC4899;--rd:rgba(236,72,153,.15);
-  --em:#10B981;--ed:rgba(16,185,129,.15);
-  --txt:#E2E8F0;--tm:#94A3B8;--td:#64748B;
-  --bdr:rgba(255,255,255,0.08);--bdrh:rgba(139,92,246,.5);
+  /* === ĐÃ ĐỔI SANG MÀU KEM SÁNG === */
+  --bg:#FFF8E1; 
+  --s1:#FFFFFF;--s2:#F8FAFC;
+  --p:#8B5CF6;--pl:#A78BFA;--pd:rgba(139,92,246,.12);--pb:rgba(139,92,246,.25);
+  --amber:#D97706;--al:#F59E0B;--ad:rgba(217,119,6,.12);
+  --rose:#E11D48;--rd:rgba(225,29,72,.12);
+  --em:#059669;--ed:rgba(5,150,105,.12);
+  /* Đổi chữ sang màu tối để hiển thị rõ trên nền kem */
+  --txt:#1E293B;
+  --tm:#475569;
+  --td:#94A3B8;
+  --bdr:rgba(0,0,0,0.08);--bdrh:rgba(139,92,246,.5);
   --r:16px;--rl:24px;
-  --sh:0 16px 60px rgba(0,0,0,.6);
-  --gp:0 0 32px rgba(139,92,246,.25);
+  --sh:0 16px 40px rgba(0,0,0,.08);
+  --gp:0 0 32px rgba(139,92,246,.2);
   --tr:all .3s cubic-bezier(.34,1.56,.64,1);
 }
 html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:'Outfit',system-ui,sans-serif;color:var(--txt);-webkit-font-smoothing:antialiased}
 
-/* === CAT BACKGROUND (REDESIGNED CUTE TUXEDO CAT) === */
-#cat-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; display: flex; align-items: center; justify-content: center; opacity: 0.25; transition: opacity 0.5s; }
-#cat-bg.on { opacity: 0.4; }
-.cat { position: relative; width: 280px; height: 240px; }
+/* === CAT BACKGROUND (MÈO TO HƠN, MÀU ĐẬM, MẮT TRÒN) === */
+#cat-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; display: flex; align-items: center; justify-content: center; opacity: 0.6; transition: opacity 0.5s; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.15)); }
+#cat-bg.on { opacity: 1; }
+/* Phóng to con mèo lên 1.6 lần */
+.cat { position: relative; width: 280px; height: 240px; transform: scale(1.6); }
 
-/* Face & Tuxedo white patch */
-.cat-face { position: absolute; inset: 0; background: #1a1a1a; border-radius: 45% 45% 40% 40% / 55% 55% 45% 45%; overflow: hidden; box-shadow: inset 0 -10px 20px rgba(0,0,0,0.8); }
-.cat-tuxedo { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 130px; height: 95px; background: #f8fafc; border-radius: 50% 50% 0 0; }
+/* Face & Tuxedo white patch - Đổi sang màu đen đậm (#050505) */
+.cat-face { position: absolute; inset: 0; background: #050505; border-radius: 45% 45% 40% 40% / 55% 55% 45% 45%; overflow: hidden; box-shadow: inset 0 -10px 20px rgba(0,0,0,0.8); }
+.cat-tuxedo { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 130px; height: 95px; background: #FFFFFF; border-radius: 50% 50% 0 0; }
 
-/* Triangular Ears using clip-path */
-.ear { position: absolute; top: -25px; width: 75px; height: 85px; background: #1a1a1a; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); z-index: -1; }
+/* Ears - Đổi sang màu đen đậm */
+.ear { position: absolute; top: -25px; width: 75px; height: 85px; background: #050505; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); z-index: -1; }
 .ear.left { left: 15px; transform: rotate(-25deg); }
 .ear.right { right: 15px; transform: rotate(25deg); }
 .ear-inner { position: absolute; inset: 15px 15px 0 15px; background: #fbcfe8; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
 
-/* Slanted Cat Eyes */
+/* Slanted Cat Eyes - LÒNG ĐEN HÌNH TRÒN */
 .eye-wrap { position: absolute; top: 80px; display: flex; gap: 45px; left: 50%; transform: translateX(-50%); }
 .eye { position: relative; width: 55px; height: 55px; background: #fde047; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; border: 3px solid #000; overflow: hidden; transition: transform 0.15s ease-out; box-shadow: inset 0 4px 10px rgba(217, 119, 6, 0.6); }
-.pupil { position: absolute; width: 10px; height: 38px; background: #000; border-radius: 50%; left: 50%; top: 50%; transform: translate(-50%, -50%); transition: all 0.05s ease-out; }
-.pupil::after { content:''; position: absolute; top: 6px; left: 2px; width: 4px; height: 10px; background: #fff; border-radius: 50%; }
+/* Đồng tử tròn xoe */
+.pupil { position: absolute; width: 30px; height: 30px; background: #000; border-radius: 50%; left: 50%; top: 50%; transform: translate(-50%, -50%); transition: all 0.05s ease-out; }
+.pupil::after { content:''; position: absolute; top: 5px; left: 5px; width: 8px; height: 8px; background: #fff; border-radius: 50%; }
 
 /* Teasing expression */
 .cat.teasing .eye { transform: scaleY(0.15) translateY(40px); background: #fff; }
 
-/* Whiskers */
+/* Whiskers - Điều chỉnh màu ria mép cho nổi bật trên nền đen */
 .whiskers { position: absolute; top: 135px; width: 100%; display: flex; justify-content: space-between; padding: 0 10px; pointer-events: none; }
-.whisker-l, .whisker-r { position: relative; width: 65px; height: 2px; background: rgba(255,255,255,0.25); border-radius: 2px; }
-.whisker-l::before, .whisker-l::after, .whisker-r::before, .whisker-r::after { content: ''; position: absolute; width: 65px; height: 2px; background: rgba(255,255,255,0.25); left: 0; border-radius: 2px;}
+.whisker-l, .whisker-r { position: relative; width: 65px; height: 2px; background: rgba(255,255,255,0.4); border-radius: 2px; }
+.whisker-l::before, .whisker-l::after, .whisker-r::before, .whisker-r::after { content: ''; position: absolute; width: 65px; height: 2px; background: rgba(255,255,255,0.4); left: 0; border-radius: 2px;}
 .whisker-l { transform: rotate(10deg); left: -15px; }
 .whisker-l::before { top: -15px; transform: rotate(10deg); }
 .whisker-l::after { top: 15px; transform: rotate(-10deg); }
@@ -78,154 +83,156 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 .cat.teasing .tongue { height: 30px; }
 .cat.teasing .mouth-l, .cat.teasing .mouth-r { border-color: transparent; }
 
-/* === HEADER, LOGO, AUTH === */
-header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:20px 44px;background:linear-gradient(to bottom,rgba(17,21,38,.9) 0%,transparent 100%);pointer-events:auto}
+/* === HEADER, LOGO, AUTH (Chuyển sang nền kem) === */
+header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:20px 44px;background:linear-gradient(to bottom,rgba(255,248,225,.9) 0%,transparent 100%);pointer-events:auto}
 .logo{display:flex;align-items:center;gap:12px}
-.logo-gem{width:34px;height:34px;background:linear-gradient(135deg,var(--p),var(--rose));border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(236,72,153,.4)}
+.logo-gem{width:34px;height:34px;background:linear-gradient(135deg,var(--p),var(--rose));border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(139,92,246,.3)}
 .logo-gem svg{width:18px;height:18px;color:#fff}
 #auth-area{pointer-events:auto}
-.btn-si{display:flex;align-items:center;gap:8px;padding:10px 24px;background:var(--pd);border:1px solid var(--bdrh);border-radius:40px;color:var(--pl);font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:var(--tr);backdrop-filter:blur(16px)}
-.btn-si:hover{background:var(--pb);box-shadow:var(--gp);transform:translateY(-2px)}
-.user-pill{display:flex;align-items:center;gap:12px;padding:6px 16px 6px 6px;background:var(--pd);border:1px solid var(--bdr);border-radius:40px;cursor:pointer;backdrop-filter:blur(16px);transition:var(--tr)}
-.user-pill:hover{border-color:var(--bdrh);background:var(--pb)}
-.avi{width:32px;height:32px;border-radius:50%;background:var(--p);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:#fff;flex-shrink:0;box-shadow: 0 2px 6px rgba(0,0,0,0.3)}
+.btn-si{display:flex;align-items:center;gap:8px;padding:10px 24px;background:#FFFFFF;border:1px solid var(--bdr);border-radius:40px;color:var(--p);font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:var(--tr);backdrop-filter:blur(16px);box-shadow:0 2px 10px rgba(0,0,0,0.05)}
+.btn-si:hover{background:var(--pd);border-color:var(--p);transform:translateY(-2px)}
+.user-pill{display:flex;align-items:center;gap:12px;padding:6px 16px 6px 6px;background:#FFFFFF;border:1px solid var(--bdr);border-radius:40px;cursor:pointer;backdrop-filter:blur(16px);transition:var(--tr);box-shadow:0 2px 10px rgba(0,0,0,0.05)}
+.user-pill:hover{border-color:var(--p);background:var(--pd)}
+.avi{width:32px;height:32px;border-radius:50%;background:var(--p);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:#fff;flex-shrink:0;box-shadow: 0 2px 6px rgba(0,0,0,0.1)}
 .u-name-status{display:flex;flex-direction:column}
 .u-name{font-size:.85rem;font-weight:600;color:var(--txt)}
 .u-status{font-size:.7rem;color:var(--tm);max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.btn-so{padding:5px 12px;background:rgba(236,72,153,0.1);border:1px solid rgba(236,72,153,0.3);border-radius:20px;color:var(--rose);font-size:.72rem;font-family:'Outfit',sans-serif;cursor:pointer;transition:var(--tr);margin-left:8px}
-.btn-so:hover{background:var(--rd);border-color:var(--rose);transform:scale(1.05)}
+.btn-so{padding:5px 12px;background:var(--rd);border:1px solid rgba(225,29,72,0.2);border-radius:20px;color:var(--rose);font-size:.72rem;font-family:'Outfit',sans-serif;cursor:pointer;transition:var(--tr);margin-left:8px}
+.btn-so:hover{background:rgba(225,29,72,0.15);transform:scale(1.05)}
 
-/* === ORBIT CARDS === */
+/* === ORBIT CARDS (Chuyển sang thiết kế nền sáng) === */
 #orbit-container{position:fixed;inset:0;z-index:20;pointer-events:none;display:grid;grid-template-columns:minmax(200px,1fr) minmax(300px,600px) minmax(200px,1fr);grid-template-rows:1fr;padding:100px 40px 60px}
 .sidebar{display:flex;flex-direction:column;justify-content:space-around;gap:20px;pointer-events:none}
 .left-sidebar{grid-column:1;align-items:start}
 .right-sidebar{grid-column:3;align-items:end}
 .cw{pointer-events:auto;width:100%;max-width:240px}
-.orbit-card{width:100%;padding:16px 20px;background:rgba(26,31,53,0.6);border:1px solid rgba(255,255,255,0.08);border-radius:var(--rl);backdrop-filter:blur(16px);cursor:pointer;display:flex;align-items:center;gap:16px;transition:var(--tr);user-select:none;position:relative;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.3)}
-.orbit-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.03) 0%,transparent 100%);pointer-events:none}
-.orbit-card:hover{border-color:var(--pl);box-shadow:var(--gp),var(--sh);transform:translateY(-4px);background:rgba(139,92,246,0.1)}
+.orbit-card{width:100%;padding:16px 20px;background:rgba(255,255,255,0.85);border:1px solid rgba(0,0,0,0.06);border-radius:var(--rl);backdrop-filter:blur(16px);cursor:pointer;display:flex;align-items:center;gap:16px;transition:var(--tr);user-select:none;position:relative;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.06)}
+.orbit-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.5) 0%,transparent 100%);pointer-events:none}
+.orbit-card:hover{border-color:var(--p);box-shadow:var(--gp), 0 10px 40px rgba(139,92,246,.1);transform:translateY(-4px);background:#FFFFFF}
 .orbit-card:active{transform:scale(.96)}
 .ci-wrap{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.ci-polls{background:var(--rd);color:var(--rose)}
-.ci-tales{background:var(--pd);color:var(--pl)}
+.ci-polls{background:rgba(225,29,72,0.1);color:var(--rose)}
+.ci-tales{background:var(--pd);color:var(--p)}
 .ci-cal{background:var(--ed);color:var(--em)}
-.ci-gallery{background:rgba(245,158,11,0.15);color:var(--amber)}
+.ci-gallery{background:rgba(217,119,6,0.1);color:var(--amber)}
 .ci-vis{background:var(--ad);color:var(--amber)}
-.ci-profile{background:rgba(255,255,255,0.06);color:var(--tm)}
+.ci-profile{background:rgba(0,0,0,0.06);color:var(--tm)}
 .ci-wrap svg{width:22px;height:22px}
 .card-text{display:flex;flex-direction:column;text-align:left}
 .c-title{font-size:.95rem;font-weight:600;color:var(--txt);margin-bottom:2px}
 .c-desc{font-size:.7rem;color:var(--tm);font-weight:400}
 
-/* === OVERLAY & MODALS === */
-#ov{position:fixed;inset:0;z-index:200;background:rgba(10,13,25,0.85);backdrop-filter:blur(16px);display:none;align-items:center;justify-content:center;pointer-events:auto}
+/* === OVERLAY & MODALS (Nền sáng) === */
+#ov{position:fixed;inset:0;z-index:200;background:rgba(255,248,225,0.85);backdrop-filter:blur(16px);display:none;align-items:center;justify-content:center;pointer-events:auto}
 #ov.on{display:flex;animation:fi .2s ease}
 @keyframes fi{from{opacity:0}to{opacity:1}}
-.modal{display:none;flex-direction:column;background:linear-gradient(155deg,#161a2b,#111422);border:1px solid var(--bdr);border-radius:26px;width:min(660px,92vw);max-height:88vh;overflow:hidden;box-shadow:0 24px 90px rgba(0,0,0,0.7),var(--gp);position:relative}
+.modal{display:none;flex-direction:column;background:#FFFFFF;border:1px solid var(--bdr);border-radius:26px;width:min(660px,92vw);max-height:88vh;overflow:hidden;box-shadow:0 30px 90px rgba(0,0,0,0.15),var(--gp);position:relative}
 .modal::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--pl),transparent);z-index:1}
 .modal.on{display:flex;animation:su .3s cubic-bezier(.34,1.56,.64,1)}
 @keyframes su{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
-.mh{padding:26px 30px 22px;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:12px}
+.mh{padding:26px 30px 22px;border-bottom:1px solid rgba(0,0,0,0.05);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:12px}
 .mt{font-family:'DM Serif Display',serif;font-size:1.4rem;color:var(--txt)}
 .mha{display:flex;align-items:center;gap:10px}
-.mbtn-x{width:34px;height:34px;border:1px solid rgba(255,255,255,0.1);border-radius:50%;background:rgba(255,255,255,0.03);color:var(--tm);font-size:.92rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--tr);flex-shrink:0}
+.mbtn-x{width:34px;height:34px;border:1px solid rgba(0,0,0,0.08);border-radius:50%;background:#F8FAFC;color:var(--tm);font-size:.92rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--tr);flex-shrink:0}
 .mbtn-x:hover{border-color:var(--rose);color:var(--rose);transform:rotate(90deg);background:var(--rd)}
 .mb{flex:1;overflow-y:auto;padding:26px 30px}
 .mb::-webkit-scrollbar{width:5px}
-.mb::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:4px}
+.mb::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.15);border-radius:4px}
 
 /* === FORMS, BUTTONS === */
 .fg{margin-bottom:16px}
 .fl{display:block;font-size:.72rem;font-weight:600;color:var(--tm);margin-bottom:7px;letter-spacing:.08em;text-transform:uppercase}
-.fi,.fta{width:100%;padding:11px 15px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08);border-radius:12px;color:var(--txt);font-family:'Outfit',sans-serif;font-size:.9rem;transition:var(--tr);outline:none;resize:none}
-.fi:focus,.fta:focus{border-color:var(--pl);background:rgba(139,92,246,0.05);box-shadow:0 0 0 3px rgba(139,92,246,0.15)}
+.fi,.fta{width:100%;padding:11px 15px;background:rgba(0,0,0,0.03);border:1px solid rgba(0,0,0,0.1);border-radius:12px;color:var(--txt);font-family:'Outfit',sans-serif;font-size:.9rem;transition:var(--tr);outline:none;resize:none}
+.fi:focus,.fta:focus{border-color:var(--p);background:#FFF;box-shadow:0 0 0 3px var(--pd)}
 .fta{min-height:90px}
 .btn-p{width:100%;padding:13px;background:linear-gradient(135deg,var(--p),#6d28d9);border:none;border-radius:13px;color:#fff;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;transition:var(--tr);margin-top:4px}
-.btn-p:hover{box-shadow:0 6px 24px rgba(139,92,246,0.4);transform:translateY(-2px);filter:brightness(1.1)}
-.btn-s{padding:9px 20px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.12);border-radius:11px;color:var(--pl);font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:500;cursor:pointer;transition:var(--tr)}
-.btn-s:hover{background:var(--pd);border-color:var(--pl);transform:translateY(-1px)}
-.atabs{display:flex;gap:4px;background:rgba(0,0,0,0.3);border-radius:12px;padding:4px;margin-bottom:24px}
+.btn-p:hover{box-shadow:0 6px 24px rgba(139,92,246,0.3);transform:translateY(-2px);filter:brightness(1.1)}
+.btn-s{padding:9px 20px;background:#F8FAFC;border:1px solid rgba(0,0,0,0.08);border-radius:11px;color:var(--p);font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:500;cursor:pointer;transition:var(--tr)}
+.btn-s:hover{background:var(--pd);border-color:var(--p);transform:translateY(-1px)}
+.atabs{display:flex;gap:4px;background:rgba(0,0,0,0.04);border-radius:12px;padding:4px;margin-bottom:24px}
 .atab{flex:1;padding:10px;border:none;background:transparent;border-radius:10px;color:var(--tm);font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:500;cursor:pointer;transition:var(--tr)}
-.atab.on{background:var(--pd);color:var(--pl);border:1px solid rgba(139,92,246,0.3)}
-.err{padding:10px 14px;border-radius:10px;font-size:.81rem;margin-bottom:14px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#FCA5A5;display:none}
+.atab.on{background:#FFF;color:var(--p);border:1px solid rgba(139,92,246,0.3);box-shadow:0 2px 6px rgba(0,0,0,0.05)}
+.atab:not(.on):hover{background:rgba(0,0,0,0.03); color:var(--txt)}
+.err{padding:10px 14px;border-radius:10px;font-size:.81rem;margin-bottom:14px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#b91c1c;display:none}
 .err.on{display:block}
 .hint{font-size:.8rem;color:var(--tm);text-align:center;margin-top:16px}
-.hint a{color:var(--pl);cursor:pointer;text-decoration:none}
-.info-banner{background:var(--pd);border:1px solid var(--bdr);border-radius:12px;padding:14px 18px;font-size:.85rem;color:var(--pl);margin-bottom:20px;text-align:center}
-.post-box{background:rgba(0,0,0,.2);border:1px dashed rgba(255,255,255,.15);border-radius:14px;padding:20px;margin-bottom:24px}
+.hint a{color:var(--p);cursor:pointer;text-decoration:none;font-weight:600}
+.info-banner{background:var(--pd);border:1px solid var(--bdrh);border-radius:12px;padding:14px 18px;font-size:.85rem;color:var(--p);margin-bottom:20px;text-align:center}
+.post-box{background:rgba(0,0,0,0.02);border:1px dashed rgba(0,0,0,0.15);border-radius:14px;padding:20px;margin-bottom:24px}
 .post-box-title{font-size:.9rem;font-weight:600;color:var(--txt);margin-bottom:16px;display:flex;align-items:center;gap:8px}
 
 /* === COMMENT SYSTEM CSS === */
-.comment-section { margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); }
+.comment-section { margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(0,0,0,0.06); }
 .comment-title { font-size: 1rem; font-weight: 600; color: var(--txt); margin-bottom: 16px; }
 .comment-list { margin-bottom: 20px; }
-.comment-item { display: flex; gap: 12px; margin-bottom: 14px; background: rgba(255,255,255,0.02); padding: 10px; border-radius: 10px; }
-.comment-avi { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; color: #fff; font-weight: 700; flex-shrink: 0; }
+.comment-item { display: flex; gap: 12px; margin-bottom: 14px; background: #F8FAFC; padding: 10px; border-radius: 10px; border: 1px solid rgba(0,0,0,0.04) }
+.comment-avi { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; color: #fff; font-weight: 700; flex-shrink: 0; box-shadow:0 2px 4px rgba(0,0,0,0.1)}
 .comment-right { flex: 1; }
 .comment-meta { font-size: 0.72rem; color: var(--tm); margin-bottom: 3px; display: flex; justify-content: space-between; }
 .comment-text { font-size: 0.82rem; color: var(--txt); line-height: 1.5; }
 .comment-form { display: flex; gap: 10px; align-items: flex-start; }
-.comment-input { flex: 1; padding: 10px 14px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; color: var(--txt); font-family: inherit; font-size: 0.85rem; outline: none; resize: none; min-height: 40px; transition: var(--tr); }
-.comment-input:focus { border-color: var(--pl); }
-.btn-comment { padding: 9px 16px; background: var(--p); border: none; border-radius: 10px; color: #fff; font-weight: 600; font-size: 0.82rem; cursor: pointer; transition: var(--tr); }
-.btn-comment:hover { opacity: 0.8; transform: translateY(-1px); }
+.comment-input { flex: 1; padding: 10px 14px; background: #FFF; border: 1px solid rgba(0,0,0,0.1); border-radius: 10px; color: var(--txt); font-family: inherit; font-size: 0.85rem; outline: none; resize: none; min-height: 40px; transition: var(--tr); }
+.comment-input:focus { border-color: var(--p); }
+.btn-comment { padding: 9px 16px; background: var(--p); border: none; border-radius: 10px; color: #fff; font-weight: 600; font-size: 0.82rem; cursor: pointer; transition: var(--tr); box-shadow:0 2px 6px rgba(139,92,246,0.3)}
+.btn-comment:hover { opacity: 0.9; transform: translateY(-1px); }
 
 /* === STORIES === */
-.story-card{background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.05);border-radius:16px;padding:22px;margin-bottom:14px;transition:var(--tr);cursor:pointer}
-.story-card:hover{border-color:var(--bdrh);background:rgba(139,92,246,0.05);transform:translateX(4px)}
+.story-card{background:#FFF;border:1px solid rgba(0,0,0,0.06);border-radius:16px;padding:22px;margin-bottom:14px;transition:var(--tr);cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,0.03)}
+.story-card:hover{border-color:var(--p);background:var(--pd);transform:translateX(4px);box-shadow:0 8px 20px rgba(139,92,246,0.08)}
 .sc-excerpt{font-size:.85rem;color:var(--tm);line-height:1.6;margin-bottom:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 
 /* === GALLERY === */
 .pg{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.pc{position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.05);cursor:pointer}
+.pc{position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;background:rgba(0,0,0,0.05);border:1px solid rgba(0,0,0,0.06);cursor:pointer}
 .pc img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
 .pc:hover img{transform:scale(1.08)}
-#m-lbx.on { width: min(1200px, 95vw); display: flex; flex-direction: row; }
-.lbx-main { flex: 2; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-right: 1px solid rgba(255,255,255,0.05); position:relative}
+#m-lbx.on { width: min(1200px, 95vw); display: flex; flex-direction: row; background: #FFF;}
+.lbx-main { flex: 2; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-right: 1px solid rgba(0,0,0,0.06); position:relative}
 .lbx-side { flex: 1; padding: 20px; display: flex; flex-direction: column; overflow: hidden; }
 .lbx-img { max-width: 100%; max-height: 70vh; border-radius: 14px; object-fit: contain; }
 
 /* === VISIONS === */
 .ptl{position:relative;padding-left:44px}
-.ptl::before{content:'';position:absolute;left:14px;top:6px;bottom:0;width:2px;background:rgba(255,255,255,.05)}
+.ptl::before{content:'';position:absolute;left:14px;top:6px;bottom:0;width:2px;background:rgba(0,0,0,0.08)}
 .pi{position:relative;margin-bottom:24px}
-.pdot{position:absolute;left:-30px;top:10px;width:14px;height:14px;border-radius:50%;background:var(--amber);border:3px solid #0f111a;box-shadow:0 0 12px rgba(245,158,11,.6)}
-.pc2{background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:20px;transition:var(--tr)}
-.pc2:hover{border-color:rgba(245,158,11,.35);background:rgba(245,158,11,.05);transform:translateX(4px)}
+.pdot{position:absolute;left:-30px;top:10px;width:14px;height:14px;border-radius:50%;background:var(--amber);border:3px solid #FFF;box-shadow:0 0 10px rgba(217,119,6,.4)}
+.pc2{background:#FFF;border:1px solid rgba(0,0,0,0.06);border-radius:16px;padding:20px;transition:var(--tr);box-shadow:0 4px 15px rgba(0,0,0,0.03)}
+.pc2:hover{border-color:var(--al);background:rgba(217,119,6,0.04);transform:translateX(4px)}
 
 /* === CALENDAR === */
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:16px}
 .cdh{text-align:center;font-size:.65rem;color:var(--td);text-transform:uppercase;letter-spacing:.08em;padding:6px 0;font-weight:700}
-.cd{aspect-ratio:1;border-radius:10px;border:1px solid rgba(255,255,255,.03);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-size:.8rem;font-weight:500;color:var(--tm);transition:all .2s ease;position:relative;background:rgba(0,0,0,.2)}
-.cd:hover:not(.empty){border-color:var(--pl);color:var(--txt);background:var(--pd)}
-.cd.today{border-color:var(--p);color:var(--pl);background:rgba(139,92,246,.1)}
-.cd.selected{border-color:var(--pl)!important;background:var(--pd)!important;color:var(--pl)!important}
-.cd.past{opacity:.4}
+.cd{aspect-ratio:1;border-radius:10px;border:1px solid rgba(0,0,0,0.05);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-size:.8rem;font-weight:500;color:var(--tm);transition:all .2s ease;position:relative;background:#FFF}
+.cd:hover:not(.empty){border-color:var(--p);color:var(--p);background:var(--pd)}
+.cd.today{border-color:var(--p);color:var(--p);background:var(--pd)}
+.cd.selected{border-color:var(--p)!important;background:var(--p)!important;color:#fff!important}
+.cd.selected .cdd {background:#fff!important;}
+.cd.past{opacity:.5}
 .cdd{width:5px;height:5px;border-radius:50%}
 
 /* === POLLS === */
-.poll-option{margin-bottom:8px;cursor:pointer;padding:11px 14px;border:1px solid rgba(255,255,255,.06);border-radius:12px;background:rgba(255,255,255,.02);position:relative;overflow:hidden;transition:all .2s ease;user-select:none}
-.poll-option.voted{border-color:rgba(139,92,246,.4);background:rgba(139,92,246,.1)}
-.poll-bar{position:absolute;left:0;top:0;height:100%;background:rgba(139,92,246,.1);pointer-events:none}
+.poll-option{margin-bottom:8px;cursor:pointer;padding:11px 14px;border:1px solid rgba(0,0,0,0.08);border-radius:12px;background:#FFF;position:relative;overflow:hidden;transition:all .2s ease;user-select:none;box-shadow:0 2px 5px rgba(0,0,0,0.02)}
+.poll-option.voted{border-color:var(--p);background:var(--pd)}
+.poll-bar{position:absolute;left:0;top:0;height:100%;background:rgba(139,92,246,0.1);pointer-events:none}
 
 /* === BIRTHDAY & SPIRITUAL === */
-.spiri-section { background: rgba(139,92,246,0.06); border: 1px solid var(--bdr); border-radius: 16px; padding: 20px; margin-bottom: 24px; }
+.spiri-section { background: rgba(139,92,246,0.04); border: 1px solid rgba(139,92,246,0.15); border-radius: 16px; padding: 20px; margin-bottom: 24px; }
 .spiri-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-.spiri-item { text-align: center; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.04); }
-.spiri-val { font-size: 1.8rem; font-weight: 700; color: var(--txt); margin-bottom: 4px; }
+.spiri-item { text-align: center; background: #FFF; padding: 15px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.06); box-shadow:0 2px 8px rgba(0,0,0,0.02)}
+.spiri-val { font-size: 1.8rem; font-weight: 700; color: var(--p); margin-bottom: 4px; }
 .spiri-val.zodiac-emoji { font-size: 2.5rem; }
 .spiri-lbl { font-size: 0.72rem; color: var(--tm); text-transform: uppercase; letter-spacing: 0.1em; }
 
 /* === PROFILE CUSTOMIZATION === */
 .color-picker { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
-.color-dot { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: var(--tr); }
-.color-dot.active { border-color: #fff; transform: scale(1.1); }
+.color-dot { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: var(--tr); box-shadow:0 2px 5px rgba(0,0,0,0.2)}
+.color-dot.active { border-color: var(--txt); transform: scale(1.15); }
 
 /* === TOAST === */
-#toast{position:fixed;bottom:30px;right:30px;z-index:9999;padding:14px 24px;background:var(--p);border-radius:14px;color:#fff;font-size:.9rem;font-weight:600;box-shadow:0 10px 30px rgba(139,92,246,0.5);transform:translateY(80px);opacity:0;transition:all 0.4s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
+#toast{position:fixed;bottom:30px;right:30px;z-index:9999;padding:14px 24px;background:var(--p);border-radius:14px;color:#fff;font-size:.9rem;font-weight:600;box-shadow:0 10px 30px rgba(139,92,246,0.3);transform:translateY(80px);opacity:0;transition:all 0.4s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
 #toast.on{transform:translateY(0);opacity:1}
 
-@media(max-width:640px){#orbit-container{display:flex;flex-direction:column;overflow-y:auto;padding:80px 20px 30px;gap:15px}.sidebar{flex-direction:column;width:100%;padding:0}.orbit-card{padding:14px 16px}.pg{grid-template-columns:repeat(2,1fr)} #m-lbx.on{flex-direction:column; overflow-y:auto} .lbx-main{border-right:none; border-bottom:1px solid rgba(255,255,255,0.05)} .cat{width:240px; height:200px; transform: scale(0.8);}}
+@media(max-width:640px){#orbit-container{display:flex;flex-direction:column;overflow-y:auto;padding:80px 20px 30px;gap:15px}.sidebar{flex-direction:column;width:100%;padding:0}.orbit-card{padding:14px 16px}.pg{grid-template-columns:repeat(2,1fr)} #m-lbx.on{flex-direction:column; overflow-y:auto} .lbx-main{border-right:none; border-bottom:1px solid rgba(0,0,0,0.06)} .cat{width:200px; height:180px; transform: scale(1);}}
 </style>
 </head>
 <body>
@@ -340,11 +347,11 @@ const S = {
 };
 
 const VIS_TYPES = [
-  {key:'meetup',emoji:'👥',label:'Meetup',color:'rgba(139,92,246,.2)'},
-  {key:'travel',emoji:'✈️',label:'Travel',color:'rgba(16,185,129,.2)'},
-  {key:'event', emoji:'🎉',label:'Event', color:'rgba(245,158,11,.2)'},
-  {key:'activity',emoji:'🎯',label:'Activity',color:'rgba(236,72,153,.2)'},
-  {key:'other', emoji:'💡',label:'Other', color:'rgba(255,255,255,.08)'}
+  {key:'meetup',emoji:'👥',label:'Meetup',color:'rgba(139,92,246,.15)'},
+  {key:'travel',emoji:'✈️',label:'Travel',color:'rgba(5,150,105,.15)'},
+  {key:'event', emoji:'🎉',label:'Event', color:'rgba(217,119,6,.15)'},
+  {key:'activity',emoji:'🎯',label:'Activity',color:'rgba(225,29,72,.15)'},
+  {key:'other', emoji:'💡',label:'Other', color:'rgba(0,0,0,.06)'}
 ];
 
 function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('on');setTimeout(()=>el.classList.remove('on'),2800)}
@@ -365,15 +372,18 @@ document.addEventListener('mousemove', (e) => {
     const eyeCenterX = rect.left + rect.width / 2;
     const eyeCenterY = rect.top + rect.height / 2;
     const angle = Math.atan2(mouseY - eyeCenterY, mouseX - eyeCenterX);
-    const distance = Math.min(15, Math.hypot(mouseX - eyeCenterX, mouseY - eyeCenterY) / 25);
+    
+    // Giới hạn để con ngươi hình tròn không bị lẹm ra ngoài viền mắt
+    const distance = Math.min(10, Math.hypot(mouseX - eyeCenterX, mouseY - eyeCenterY) / 25);
+    
     pupil.style.transform = `translate(calc(-50% + ${Math.cos(angle)*distance}px), calc(-50% + ${Math.sin(angle)*distance}px))`;
   });
 });
 
 function teaseAndOpen(modalName) {
   cat.classList.add('teasing');
-  setTimeout(() => cat.classList.remove('teasing'), 1000); // Lè lưỡi 1 giây
-  setTimeout(() => App.open(modalName), 300); // Mở hộp thoại ngay
+  setTimeout(() => cat.classList.remove('teasing'), 1000); 
+  setTimeout(() => App.open(modalName), 300); 
 }
 
 // =====================================================
@@ -511,11 +521,11 @@ const Stories = {
       const cmtCount = (S.comments?.stories && S.comments.stories[s.id]) ? Object.keys(S.comments.stories[s.id]).length : 0;
       return`<div class="story-card" onclick="App.openOver('story', ${s.id})">
         <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:10px">
-          <div class="sc-title" style="font-weight:600;color:var(--pl)">${s.title}</div>
-          ${canDel?`<button onclick="event.stopPropagation(); Stories.delete(${s.id})" style="padding:3px 10px;background:transparent;border:1px solid rgba(239,68,68,0.3);border-radius:20px;color:rgba(239,68,68,0.7);font-size:0.7rem;cursor:pointer;">Xóa</button>`:''}
+          <div class="sc-title" style="font-weight:600;color:var(--p)">${s.title}</div>
+          ${canDel?`<button onclick="event.stopPropagation(); Stories.delete(${s.id})" style="padding:3px 10px;background:transparent;border:1px solid rgba(239,68,68,0.2);border-radius:20px;color:#b91c1c;font-size:0.65rem;cursor:pointer;">Xóa</button>`:''}
         </div>
         <div class="sc-excerpt">${s.content}</div>
-        <div class="sc-meta" style="font-size:0.75rem;color:var(--tm);display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,0.05);padding-top:10px">
+        <div class="sc-meta" style="font-size:0.75rem;color:var(--tm);display:flex;justify-content:space-between;border-top:1px solid rgba(0,0,0,0.05);padding-top:10px">
           <span>Tác giả: ${author} · ${s.date}</span><span>💬 ${cmtCount} bình luận</span>
         </div>
       </div>`;
@@ -532,7 +542,7 @@ const Stories = {
   renderDetail(id){
     const s = S.stories.find(x=>x.id===id); if(!s) return;
     document.getElementById('m-story').innerHTML=`
-      <div class="mh"><div class="mt" style="font-size:1.2rem;flex:1;color:var(--pl)">${s.title}</div><div class="mha"><button class="mbtn-x" onclick="App.back()">←</button><button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
+      <div class="mh"><div class="mt" style="font-size:1.2rem;flex:1;color:var(--p)">${s.title}</div><div class="mha"><button class="mbtn-x" onclick="App.back()">←</button><button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
       <div class="mb"><div class="sfull" style="white-space:pre-wrap;line-height:1.8;color:var(--txt);font-size:0.95rem;margin-bottom:20px">${s.content}</div>
         <div style="font-size:0.8rem;color:var(--tm);text-align:right">Viết bởi ${s.author} ngày ${s.date}</div>
         <div class="comment-section"><div class="comment-title">Bình luận</div>
@@ -545,7 +555,7 @@ const Stories = {
 };
 
 // =====================================================
-// GALLERY (Đã thêm Nút Xóa và Bình luận)
+// GALLERY 
 // =====================================================
 const Gallery = {
   render(){const el=document.getElementById('m-gallery');const can=!!S.user;el.innerHTML=`<div class="mh"><div class="mt">Bộ sưu tập</div><div class="mha">${can?`<button class="btn-s" onclick="Gallery.upload()">+ Thêm Ảnh</button>`:''}<button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
@@ -575,10 +585,10 @@ const Gallery = {
     document.getElementById('m-lbx').innerHTML=`
       <div class="lbx-main">
         <img class="lbx-img" src="${p.url}">
-        <button class="lbx-x" onclick="App.back()" style="position:absolute;top:20px;right:20px;width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,0.5);color:#fff;border:none;cursor:pointer">✕</button>
+        <button class="lbx-x" onclick="App.back()" style="position:absolute;top:20px;right:20px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.9);color:#0f172a;border:1px solid rgba(0,0,0,0.1);cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,0.1)">✕</button>
       </div>
       <div class="lbx-side">
-        <div style="margin-bottom:20px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom:15px"><div style="font-weight:600;color:var(--txt);margin-bottom:4px;font-size:1.1rem">${p.cap}</div><div style="font-size:0.8rem;color:var(--tm)">Đăng bởi ${p.by} ngày ${p.date}</div></div>
+        <div style="margin-bottom:20px; border-bottom: 1px solid rgba(0,0,0,0.06); padding-bottom:15px"><div style="font-weight:600;color:var(--txt);margin-bottom:4px;font-size:1.1rem">${p.cap}</div><div style="font-size:0.8rem;color:var(--tm)">Đăng bởi ${p.by} ngày ${p.date}</div></div>
         <div class="comment-section" style="margin-top:0; border:none; flex:1; display:flex; flex-direction:column; overflow:hidden">
           <div class="comment-title">Bình luận</div>
           <div class="comment-list" id="photo-comments-${p.id}" style="flex:1; overflow-y:auto">${Comments.listHTML('photos', p.id)}</div>
@@ -590,13 +600,13 @@ const Gallery = {
 };
 
 // =====================================================
-// POLLS
+// POLLS (ĐÃ THÊM KHOẢNG CÁCH CHO % VÀ LƯỢNG VOTE)
 // =====================================================
 const Polls = {
   render() {
     const el=document.getElementById('m-polls');const can=!!S.user;
     el.innerHTML=`<div class="mh"><div class="mt">Bình chọn</div><div class="mha">${can?`<button class="btn-s" onclick="Polls.toggleCreate()">${S.pollCreateOpen?'✕ Hủy':'+ Tạo mới'}</button>`:''}<button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
-    <div class="mb">${!can?`<div class="info-banner"><a onclick="App.open('auth')">Sign in</a> để tạo bình chọn</div>`:''}
+    <div class="mb">${!can?`<div class="info-banner"><a onclick="App.open('auth')">Đăng nhập</a> để tạo bình chọn</div>`:''}
     <div id="poll-form-c">${S.pollCreateOpen&&can?Polls.formHTML():''}</div><div id="poll-list">${Polls.listHTML()}</div></div>`;
   },
   formHTML(){return`<div class="post-box"><div class="post-box-title">🗳️ Bình chọn mới</div>
@@ -613,16 +623,17 @@ const Polls = {
       const total=poll.options.reduce((s,o)=>s+(o.voters?o.voters.length:0),0);
       const myVote=S.user?poll.options.findIndex(o=>o.voters&&o.voters.includes(S.user.name)):-1;
       const canDel=!!S.user;
-      return`<div style="background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.05);border-radius:16px;padding:20px;margin-bottom:14px">
+      return`<div style="background:#FFF;border:1px solid rgba(0,0,0,0.06);border-radius:16px;padding:20px;margin-bottom:14px;box-shadow: 0 4px 15px rgba(0,0,0,0.02)">
         <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:14px">
           <div><div style="font-family:'DM Serif Display',serif;font-size:1.08rem;color:var(--txt);margin-bottom:4px">${poll.question}</div>
-          <div style="font-size:.73rem;color:var(--td)">by ${poll.createdBy} · ${total} phiếu</div></div>
-          ${canDel?`<button onclick="Polls.delete(${poll.id})" style="padding:4px 10px;background:transparent;border:1px solid rgba(239,68,68,.3);border-radius:20px;color:rgba(239,68,68,.6);font-size:.7rem;cursor:pointer;">Xóa</button>`:''}
+          <div style="font-size:.73rem;color:var(--tm)">Tạo bởi ${poll.createdBy} <span style="margin:0 12px">·</span> ${total} phiếu</div></div>
+          ${canDel?`<button onclick="Polls.delete(${poll.id})" style="padding:4px 10px;background:transparent;border:1px solid rgba(239,68,68,.3);border-radius:20px;color:#b91c1c;font-size:.7rem;cursor:pointer;">Xóa</button>`:''}
         </div>
         ${poll.options.filter(o=>o.text&&o.text.trim()).map((opt,i)=>{
           const votes=opt.voters?opt.voters.length:0; const pct=total>0?Math.round(votes/total*100):0; const isMe=myVote===i;
+          // Đã thêm khoảng cách 12px giữa % và lượng người vote
           return`<div class="poll-option ${isMe?'voted':''}" onclick="${S.user?`Polls.vote(${poll.id},${i})`:`App.open('auth')`}">
-            <div class="poll-bar" style="width:${pct}%"></div><div class="poll-row"><span style="font-size:.88rem;color:${isMe?'var(--pl)':'var(--txt)'};font-weight:${isMe?600:400}">${opt.text}${isMe?' ✓':''}</span><span style="font-size:.78rem;color:var(--tm);font-weight:600">${pct}% · ${votes}</span></div>
+            <div class="poll-bar" style="width:${pct}%"></div><div class="poll-row"><span style="font-size:.88rem;color:${isMe?'var(--p)':'var(--txt)'};font-weight:${isMe?600:400}">${opt.text}${isMe?' ✓':''}</span><span style="font-size:.78rem;color:var(--tm);font-weight:600">${pct}% <span style="margin:0 12px">·</span> ${votes} phiếu</span></div>
           </div>`;
         }).join('')}
       </div>`;
@@ -658,7 +669,7 @@ const Visions = {
   formHTML(){
     return`<div class="post-box" style="margin-bottom:24px"><div class="post-box-title">🌟 Kế hoạch mới</div>
     <div class="fg"><label class="fl">Tên sự kiện</label><input class="fi" id="ap-t"></div>
-    <div class="fg"><label class="fl">Phân loại</label><div style="display:flex;gap:8px;flex-wrap:wrap">${VIS_TYPES.map(t=>`<button data-vtype="${t.key}" onclick="Visions.selectType('${t.key}')" style="padding:7px 14px;border:1px solid rgba(255,255,255,.1);border-radius:20px;background:rgba(255,255,255,.03);color:var(--tm);cursor:pointer">${t.emoji} ${t.label}</button>`).join('')}</div></div>
+    <div class="fg"><label class="fl">Phân loại</label><div style="display:flex;gap:8px;flex-wrap:wrap">${VIS_TYPES.map(t=>`<button data-vtype="${t.key}" onclick="Visions.selectType('${t.key}')" style="padding:7px 14px;border:1px solid rgba(0,0,0,0.08);border-radius:20px;background:#FFF;color:var(--tm);cursor:pointer">${t.emoji} ${t.label}</button>`).join('')}</div></div>
     <div class="fg"><label class="fl">Ngày dự kiến</label><input class="fi" id="ap-d" type="date"></div>
     <div class="fg"><label class="fl">Mô tả thêm</label><textarea class="fta" id="ap-c"></textarea></div>
     <button class="btn-p" onclick="Visions.add()">Lưu dự định ✨</button></div>`;
@@ -667,8 +678,8 @@ const Visions = {
     S.planType=type;
     document.querySelectorAll('[data-vtype]').forEach(b=>{
       const isSel=b.dataset.vtype===type;
-      b.style.background=isSel?VIS_TYPES.find(x=>x.key===type).color:'rgba(255,255,255,.03)';
-      b.style.borderColor=isSel?'var(--pl)':'rgba(255,255,255,.1)'; b.style.color=isSel?'var(--txt)':'var(--tm)';
+      b.style.background=isSel?VIS_TYPES.find(x=>x.key===type).color:'#FFF';
+      b.style.borderColor=isSel?'var(--p)':'rgba(0,0,0,0.08)'; b.style.color=isSel?'var(--p)':'var(--tm)';
     });
   },
   listHTML(){
@@ -679,8 +690,8 @@ const Visions = {
       const isPast=new Date(p.date)<new Date(); const canDel=!!S.user;
       return`<div class="pi"><div class="pdot" style="${isPast?'background:var(--td)':''}"></div><div class="pc2">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><span style="font-size:1.3rem">${ti.emoji}</span><span class="p-title" style="margin:0;flex:1">${p.title}</span></div>
-        <div class="p-date">${formatDate(new Date(p.date).toISOString()).split(' ')[0]}</div><div class="p-desc">${p.desc}</div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px"><span class="p-by">Tạo bởi ${p.addedBy}</span>${canDel?`<button onclick="Visions.delete(${p.id})" style="padding:3px 10px;background:transparent;border:1px solid rgba(239,68,68,.3);border-radius:20px;color:rgba(239,68,68,.65);font-size:.7rem;cursor:pointer;">Xóa</button>`:''}</div>
+        <div class="p-date" style="color:var(--amber);font-weight:600;font-size:0.8rem">${formatDate(new Date(p.date).toISOString()).split(' ')[0]}</div><div class="p-desc">${p.desc}</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px"><span class="p-by">Tạo bởi ${p.addedBy}</span>${canDel?`<button onclick="Visions.delete(${p.id})" style="padding:3px 10px;background:transparent;border:1px solid rgba(239,68,68,.3);border-radius:20px;color:#b91c1c;font-size:.7rem;cursor:pointer;">Xóa</button>`:''}</div>
       </div></div>`;
     }).join('');
   },
@@ -712,7 +723,7 @@ const Cal = {
       grid+=`<div class="${cls}" onclick="Cal.selectDay('${ds}')"><div class="cd-num">${d}</div><div class="cd-dots">${myAv&&ds>=today?`<div class="cdd" style="background:var(--amber)"></div>`:''}</div></div>`;
     }
     grid+=`</div>`;
-    const detail=S.selDay?`<div class="cal-info"><div class="cal-info-date">${formatDate(new Date(S.selDay).toISOString()).split(' ')[0]}</div>${S.user&&S.selDay>=today?`<button class="btn-s" onclick="Cal.toggleAv('${S.selDay}')">${S.user&&S.avail[S.user.name]&&S.avail[S.user.name][S.selDay]?'✓ Bạn đang rảnh (Nhấn để hủy)':'📍 Đánh dấu bạn rảnh hôm nay'}</button>`:'Đăng nhập để đánh dấu rảnh'}</div>`:'<div class="cal-info" style="color:var(--td);text-align:center">Click vào một ngày để xem chi tiết</div>';
+    const detail=S.selDay?`<div class="cal-info"><div class="cal-info-date" style="color:var(--p)">${formatDate(new Date(S.selDay).toISOString()).split(' ')[0]}</div>${S.user&&S.selDay>=today?`<button class="btn-s" onclick="Cal.toggleAv('${S.selDay}')">${S.user&&S.avail[S.user.name]&&S.avail[S.user.name][S.selDay]?'✓ Bạn đang rảnh (Nhấn để hủy)':'📍 Báo rảnh hôm nay'}</button>`:'Đăng nhập để đánh dấu rảnh'}</div>`:'<div class="cal-info" style="color:var(--td);text-align:center">Click vào một ngày để xem chi tiết</div>';
     return `<div class="cal-hd"><button class="cal-nav" onclick="Cal.nav(-1)">‹</button><div class="cal-month">${mn[m]} năm ${y}</div><button class="cal-nav" onclick="Cal.nav(1)">›</button></div>${grid}${detail}`;
   },
   selectDay(ds){S.selDay=ds; document.querySelector('#m-calendar .mb').innerHTML=this.bodyHTML();},
@@ -726,7 +737,7 @@ const Cal = {
 };
 
 // =====================================================
-// PROFILE, CUSTOMIZATION & SPIRITUAL (Cập nhật Sửa Ngày Sinh)
+// PROFILE, CUSTOMIZATION & SPIRITUAL
 // =====================================================
 const Profile = {
   colors: ['#8B5CF6', '#EC4899', '#F59E0B', '#10B981', '#3B82F6', '#EF4444', '#71717A'],
@@ -747,10 +758,10 @@ const Profile = {
       
       <div class="fg"><label class="fl">Cập nhật Ngày sinh</label><input class="fi" id="p-dob" type="date" value="${dob}"></div>
       
-      <div style="height:1px; background:rgba(255,255,255,0.05); margin:25px 0"></div>
+      <div style="height:1px; background:rgba(0,0,0,0.05); margin:25px 0"></div>
 
       <div class="spiri-section">
-        <div class="comment-title" style="text-align:center; color:var(--pl); margin-bottom:15px">✨ Góc Tâm Linh</div>
+        <div class="comment-title" style="text-align:center; color:var(--p); margin-bottom:15px">✨ Góc Tâm Linh</div>
         ${dob ? `
           <div class="spiri-grid">
             <div class="spiri-item"><div class="spiri-val">${spiri.days}</div><div class="spiri-lbl">Ngày đến Sinh nhật</div></div>
