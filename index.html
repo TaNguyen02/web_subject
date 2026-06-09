@@ -63,7 +63,6 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:var(--bg);font
 /* === ANIMAL BACKGROUND CONTAINER === */
 #animal-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; display: flex; align-items: center; justify-content: center; opacity: 0.6; transition: opacity 0.5s; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.15)); }
 #animal-bg.on { opacity: 1; }
-/* THU NHỎ KÍCH THƯỚC VỪA PHẢI (Scale 1.1) */
 .animal-container { position: relative; width: 280px; height: 240px; transform: scale(1.1); display: none; }
 .animal-container.active { display: block; }
 
@@ -86,15 +85,12 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:var(--bg);font
 .cat .whisker-r::before { top: -15px; transform: rotate(-10deg); }
 .cat .whisker-r::after { top: 15px; transform: rotate(10deg); }
 
-/* Mõm mèo bọc lại để lưỡi thò ra từ trong khe mồm */
 .cat .nose-mouth { position: absolute; top: 150px; left: 50%; transform: translateX(-50%); z-index: 2; display: flex; flex-direction: column; align-items: center; }
 .cat .nose { width: 22px; height: 14px; background: #f472b6; border-radius: 50% 50% 45% 45%; margin-bottom: -2px; z-index: 4; position: relative; box-shadow: inset 0 -2px 5px rgba(0,0,0,0.2); }
 .cat .mouth-wrap { display: flex; justify-content: center; position: relative; z-index: 3;}
-/* Mép có nền trắng để che gốc lưỡi */
 .cat .mouth-l, .cat .mouth-r { width: 22px; height: 12px; border-bottom: 3px solid #050505; border-radius: 0 0 15px 15px; transition: var(--tr); background: #FFFFFF; }
 .cat .mouth-l { border-right: 3px solid #050505; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; transform: rotate(15deg); margin-right:-2px; }
 .cat .mouth-r { border-left: 3px solid #050505; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; transform: rotate(-15deg); margin-left:-2px;}
-/* Lưỡi chìm dưới (z-index: -1) */
 .cat .tongue { position: absolute; top: 6px; width: 20px; height: 0; background: #fb7185; border-radius: 0 0 10px 10px; left: 50%; transform: translateX(-50%); transition: height 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: -1; box-shadow: inset 0 -2px 5px rgba(0,0,0,0.2); }
 .cat.teasing .tongue { height: 28px; }
 
@@ -104,28 +100,24 @@ html,body{width:100%;height:100%;overflow:hidden;background-color:var(--bg);font
 .dog-face { position: absolute; inset: 0; background: #EAB308; border-radius: 45% 45% 40% 40% / 55% 55% 45% 45%; overflow: hidden; box-shadow: inset 0 -10px 30px rgba(0,0,0,0.3); }
 .dog-snout { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); width: 150px; height: 95px; background: #FDE047; border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%; box-shadow: 0 -3px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; align-items: center; padding-top: 10px;}
 
-/* Tai cụp Golden */
 .dog .ear { position: absolute; top: 10px; width: 85px; height: 150px; background: #CA8A04; border-radius: 40% 40% 50% 50% / 30% 30% 70% 70%; z-index: -1; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
 .dog .ear.left { left: -10px; transform: rotate(15deg); transform-origin: top right; }
 .dog .ear.right { right: -10px; transform: rotate(-15deg); transform-origin: top left; }
 .dog.happy .ear.left { transform: rotate(35deg) translateY(-5px); }
 .dog.happy .ear.right { transform: rotate(-35deg) translateY(-5px); }
 
-/* Mõm, mũi, miệng Chó */
 .dog-nose { width: 40px; height: 25px; background: #1C1917; border-radius: 40% 40% 60% 60%; box-shadow: inset 0 -3px 5px rgba(255,255,255,0.15); z-index: 4; position: relative;}
 .dog .mouth-wrap { display: flex; justify-content: center; position: relative; z-index: 3; margin-top: -2px;}
-/* Mép chó che gốc lưỡi */
 .dog .mouth-l, .dog .mouth-r { width: 35px; height: 18px; border-bottom: 4px solid #1C1917; border-radius: 0 0 20px 20px; transition: var(--tr); background: #FDE047;}
 .dog .mouth-l { border-right: 4px solid #1C1917; transform: rotate(15deg); border-bottom-right-radius: 25px; margin-right: -2px;}
 .dog .mouth-r { border-left: 4px solid #1C1917; transform: rotate(-15deg); border-bottom-left-radius: 25px; margin-left: -2px;}
 
-/* Lưỡi chó nằm chìm bên dưới khe mồm (z-index: -1) */
 .dog-tongue { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: 34px; height: 0; background: #F43F5E; border-radius: 0 0 17px 17px; transition: height 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: -1;}
 .dog-tongue::after { content:''; position: absolute; top: 0; left: 16px; bottom: 5px; width: 2px; background: rgba(0,0,0,0.1); }
 .dog.happy .dog-tongue { height: 45px; top: 14px;}
 
 /* =========================================
-   === SHARED EYES CSS (MẮT TRÒN) === 
+   === SHARED EYES CSS === 
    ========================================= */
 .eye-wrap { position: absolute; top: 80px; display: flex; gap: 45px; left: 50%; transform: translateX(-50%); }
 .eye { position: relative; width: 55px; height: 55px; border-radius: 50%; border: 3px solid #000; overflow: hidden; transition: transform 0.15s ease-out; box-shadow: inset 0 4px 10px rgba(0,0,0,0.2); }
@@ -207,6 +199,7 @@ body.dark-mode .mb::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1);
 .fi,.fta{width:100%;padding:11px 15px;background:var(--bg);border:1px solid var(--bdr);border-radius:12px;color:var(--txt);font-family:'Outfit',sans-serif;font-size:.9rem;transition:var(--tr);outline:none;resize:none}
 body.dark-mode .fi, body.dark-mode .fta { background: #111827; }
 .fi:focus,.fta:focus{border-color:var(--p);background:var(--modal-bg);box-shadow:0 0 0 3px var(--pd)}
+.fi:disabled{opacity: 0.6; cursor: not-allowed;}
 .fta{min-height:90px}
 .btn-p{width:100%;padding:13px;background:linear-gradient(135deg,var(--p),#6d28d9);border:none;border-radius:13px;color:#fff;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;transition:var(--tr);margin-top:4px}
 .btn-p:hover{box-shadow:0 6px 20px rgba(124,58,237,0.3);transform:translateY(-2px);filter:brightness(1.05)}
@@ -274,14 +267,6 @@ body.dark-mode .post-box { background:rgba(255,255,255,0.02); border-color:rgba(
 .cd.past{opacity:.5}
 .cdd{width:5px;height:5px;border-radius:50%}
 
-/* CSS FIX CHO NÚT CHUYỂN THÁNG LỊCH TRÌNH */
-.cal-hd { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.cal-month { font-size: 1.2rem; font-weight: 700; color: var(--txt); }
-.cal-nav { width: 36px; height: 36px; border-radius: 50%; background: var(--modal-bg); border: 1px solid var(--bdr); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--tm); font-size: 1.2rem; font-family: sans-serif; transition: var(--tr); }
-.cal-nav:hover { background: var(--pd); border-color: var(--p); color: var(--p); }
-body.dark-mode .cal-nav { background: #374151; border-color: rgba(255,255,255,0.1); color: #94A3B8; }
-body.dark-mode .cal-nav:hover { background: var(--pd); border-color: var(--p); color: var(--p); }
-
 /* === POLLS === */
 .poll-option{margin-bottom:8px;cursor:pointer;padding:11px 14px;border:1px solid var(--bdr);border-radius:12px;background:var(--modal-bg);position:relative;overflow:hidden;transition:all .2s ease;user-select:none;box-shadow: 0 2px 5px rgba(0,0,0,0.03)}
 .poll-option.voted{border-color:var(--p);background:var(--pd)}
@@ -289,7 +274,7 @@ body.dark-mode .cal-nav:hover { background: var(--pd); border-color: var(--p); c
 .poll-percentage { margin-right: 15px; font-weight: 700; color: var(--p); font-size: 1.1rem;}
 
 /* === BIRTHDAY & SPIRITUAL === */
-.spiri-section { background: rgba(124,58,237,0.04); border: 1px solid rgba(124,58,237,0.15); border-radius: 16px; padding: 20px; margin-bottom: 24px; color:var(--p)}
+.spiri-section { background: rgba(139,92,246,0.04); border: 1px solid rgba(139,92,246,0.15); border-radius: 16px; padding: 20px; margin-bottom: 24px; color:var(--p)}
 .spiri-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
 .spiri-item { text-align: center; background: var(--modal-bg); padding: 15px; border-radius: 12px; border: 1px solid var(--bdr); box-shadow:0 2px 8px rgba(0,0,0,0.02)}
 .spiri-val { font-size: 1.8rem; font-weight: 700; color: var(--p); margin-bottom: 4px; }
@@ -338,7 +323,6 @@ body.dark-mode .bg-option { background: #374151;}
 <body>
 
 <div id="animal-bg">
-  
   <div class="animal-container cat active" id="animal-cat">
     <div class="ear left"><div class="ear-inner"></div></div>
     <div class="ear right"><div class="ear-inner"></div></div>
@@ -381,7 +365,6 @@ body.dark-mode .bg-option { background: #374151;}
       </div>
     </div>
   </div>
-
 </div>
 
 <header>
@@ -481,13 +464,11 @@ const VIS_TYPES = [
 
 function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('on');setTimeout(()=>el.classList.remove('on'),2800)}
 
-// Hàm lấy TẤT CẢ các tên liên quan đến user hiện tại (giải quyết lỗi không xóa được data cũ)
 function getMyNames() {
   if (!S.user) return [];
   return [S.userFullData?.displayName, S.user.email.split('@')[0], S.user.email, S.user.name].filter(Boolean);
 }
 
-// Hàm lấy tên hiển thị đẹp nhất
 function getMyName() {
   if(!S.user) return '';
   return S.userFullData?.displayName || S.user.name || S.user.email.split('@')[0];
@@ -621,7 +602,7 @@ const Auth = {
             displayName: name.trim(), 
             joined: new Date().toISOString(), 
             avatarColor: '#8B5CF6', 
-            status: 'Mới tham gia',
+            status: 'Thành viên mới',
             backgroundType: 'cat'
           });
           App.closeAll(); toast('Tạo tài khoản thành công! 🎉');
@@ -693,14 +674,12 @@ const Stories = {
   pFormHTML(){return`<div class="post-box"><div class="post-box-title">✍️ Chuyện mới</div>
   <div class="fg"><label class="fl">Tiêu đề</label><input class="fi" id="sf-t" placeholder="Tên câu chuyện..."></div>
   <div class="fg"><label class="fl">Nội dung</label><textarea class="fta" id="sf-c" style="min-height:140px" placeholder="Bắt đầu viết ở đây..."></textarea></div>
-  <button class="btn-p" onclick="Stories.post()">Đăng bài</button></div>`},
+  <button class="btn-p" onclick="Stories.post()">Đăng câu chuyện ✨</button></div>`},
   listHTML(){
-    if(!S.stories.length) return `<div class="empty-st"><p>Góc này còn trống.</p></div>`;
+    if(!S.stories.length) return `<div class="empty-st"><p>Chưa có câu chuyện nào.</p></div>`;
     
     return S.stories.slice().reverse().slice(0, 20).map(s=>{
-      const author = s.author || 'Ẩn danh'; 
-      // TRẢ LẠI QUYỀN XÓA CHO TẤT CẢ USER NHƯ CODE GỐC CỦA BẠN (!!S.user)
-      const canDel = !!S.user; 
+      const author = s.author || 'Ẩn danh'; const canDel = !!S.user;
       const avi = s.authorAvi;
       const cmtCount = (S.comments?.stories && S.comments.stories[s.id]) ? Object.keys(S.comments.stories[s.id]).length : 0;
       return`<div class="story-card" onclick="App.openOver('story', ${s.id})">
@@ -752,20 +731,19 @@ const Stories = {
         </div>
       </div>`;
   },
-  delete(id) { if(confirm('Xóa vĩnh viễn câu chuyện này?')){ S.stories = S.stories.filter(s=>s.id!==id); S.save('stories', S.stories); toast('Đã xóa. 🗑️'); App.render('stories'); } }
+  delete(id) { if(confirm('Xóa câu chuyện này?')){ S.stories = S.stories.filter(s=>s.id!==id); S.save('stories', S.stories); toast('Đã xóa. 🗑️'); App.render('stories'); } }
 };
 
 // =====================================================
 // GALLERY 
 // =====================================================
 const Gallery = {
-  render(){const el=document.getElementById('m-gallery');const can=!!S.user;
-  el.innerHTML=`<div class="mh"><div class="mt">Bộ sưu tập</div><div class="mha">${can?`<button class="btn-s" onclick="Gallery.upload()">+ Thêm Ảnh</button>`:''}<button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
-  <div class="mb">${!can?`<div class="info-banner"><a onclick="App.open('auth')">Đăng nhập</a> để đăng khoảnh khắc</div>`:''}
+  render(){const el=document.getElementById('m-gallery');const can=!!S.user;el.innerHTML=`<div class="mh"><div class="mt">Bộ sưu tập</div><div class="mha">${can?`<button class="btn-s" onclick="Gallery.upload()">+ Thêm Ảnh</button>`:''}<button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
+  <div class="mb">${!can?`<div class="info-banner"><a onclick="App.open('auth')">Đăng nhập</a> để thêm ảnh</div>`:''}
   <input type="file" id="gfup" accept="image/*" style="display:none" onchange="Gallery.handleUpload(event)">
   ${S.photos.length?`<div class="pg">${S.photos.slice().reverse().slice(0, 30).map(p=>{
-    const canDel = !!S.user; // Trả lại quyền xóa tự do
-    return `<div class="pc" onclick="App.openOver('lbx',${p.id})"><img src="${p.url}" loading="lazy"><div class="pc-ov" onclick="App.openOver('lbx',${p.id})"><div class="pc-cap">${p.cap}<br><span style="opacity:.6;font-size:.65rem">${p.by}</span></div></div>${canDel?`<button onclick="event.stopPropagation();Gallery.delete(${p.id})" title="Xóa ảnh" style="position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:rgba(220,38,38,.9);border:none;color:#fff;font-size:.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;box-shadow:0 2px 10px rgba(0,0,0,.6);transition:transform .15s;opacity:.85" onmouseover="this.style.transform='scale(1.15)';this.style.opacity='1'" onmouseout="this.style.transform='scale(1)';this.style.opacity='.85'">🗑</button>`:''}</div>`
+    const canDel = !!S.user;
+    return `<div class="pc"><img src="${p.url}" loading="lazy" onclick="App.openOver('lbx',${p.id})"><div class="pc-ov" onclick="App.openOver('lbx',${p.id})"><div class="pc-cap">${p.cap}<br><span style="opacity:.6;font-size:.65rem">${p.by}</span></div></div>${canDel?`<button onclick="event.stopPropagation();Gallery.delete(${p.id})" title="Xóa ảnh" style="position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:rgba(220,38,38,.9);border:none;color:#fff;font-size:.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;box-shadow:0 2px 10px rgba(0,0,0,.6);transition:transform .15s;opacity:.85" onmouseover="this.style.transform='scale(1.15)';this.style.opacity='1'" onmouseout="this.style.transform='scale(1)';this.style.opacity='.85'">🗑</button>`:''}</div>`
   }).join('')}</div>`:`<div class="empty-st"><p>Chưa có hình ảnh nào.</p></div>`}</div>`;},
   upload(){document.getElementById('gfup').click()},
   handleUpload(e){
@@ -782,8 +760,8 @@ const Gallery = {
           const myName = getMyName();
           S.photos.push({id:Date.now(),uid:S.user.uid, url:result.data.url,cap:cap.trim(),by:myName,date:new Date().toISOString().split('T')[0]});
           S.save('photos',S.photos);Gallery.render();toast('Đã thêm ảnh! 📸');
-        }else toast('Lỗi tải ảnh lên ImgBB ❌');
-      }).catch(()=>toast('Lỗi kết nối mạng! ❌'));
+        }else toast('Lỗi API ImgBB ❌');
+      }).catch(()=>toast('Lỗi mạng! ❌'));
     }; reader.readAsDataURL(f); e.target.value='';
   },
   renderLbx(id){
@@ -809,7 +787,7 @@ const Gallery = {
 };
 
 // =====================================================
-// POLLS 
+// POLLS
 // =====================================================
 const Polls = {
   render() {
@@ -823,8 +801,8 @@ const Polls = {
   <div class="fg"><label class="fl">Các lựa chọn (từ 2 đến 4)</label>
     <input class="fi" id="po-0" placeholder="Lựa chọn 1" style="margin-bottom:8px">
     <input class="fi" id="po-1" placeholder="Lựa chọn 2" style="margin-bottom:8px">
-    <input class="fi" id="po-2" placeholder="Lựa chọn 3 (không bắt buộc)" style="margin-bottom:8px">
-    <input class="fi" id="po-3" placeholder="Lựa chọn 4 (không bắt buộc)">
+    <input class="fi" id="po-2" placeholder="Lựa chọn 3 (tùy chọn)" style="margin-bottom:8px">
+    <input class="fi" id="po-3" placeholder="Lựa chọn 4 (tùy chọn)">
   </div><button class="btn-p" onclick="Polls.create()">Tạo bình chọn 🗳️</button></div>`},
   listHTML(){
     if(!S.polls||!S.polls.length)return`<div class="empty-st"><p>Chưa có cuộc bình chọn nào.</p></div>`;
@@ -832,11 +810,7 @@ const Polls = {
     
     return S.polls.slice().reverse().map(poll=>{
       const total=poll.options.reduce((s,o)=>s+(o.voters?o.voters.length:0),0);
-      
-      // KIỂM TRA MẢNG TÊN ĐỂ LUÔN NHẬN DIỆN ĐƯỢC MÌNH ĐÃ VOTE
       const myVote = S.user ? poll.options.findIndex(o => o.voters && o.voters.some(v => myNames.includes(v))) : -1;
-      
-      // TRẢ LẠI QUYỀN XÓA TỰ DO CHO BẤT KỲ AI ĐÃ LOG IN
       const canDel = !!S.user;
 
       return`<div style="background:var(--modal-bg);border:1px solid var(--bdr);border-radius:16px;padding:20px;margin-bottom:14px;box-shadow: 0 4px 15px rgba(0,0,0,0.03)">
@@ -875,21 +849,16 @@ const Polls = {
     const myName = getMyName();
     const myNames = getMyNames();
     const poll=S.polls.find(p=>p.id===pollId);if(!poll)return;
-    
-    // Tìm xem mình đã vote ở đâu (quét tất cả các tên cũ/mới của bản thân)
     const cur = poll.options.findIndex(o=>o.voters && o.voters.some(v => myNames.includes(v)));
     
-    // Rút lại vote cũ
     if(cur!==-1) {
        poll.options[cur].voters = poll.options[cur].voters.filter(v => !myNames.includes(v));
     }
-    // Chèn vote mới
     if(cur!==optIdx){
       if(!poll.options[optIdx].voters) poll.options[optIdx].voters=[];
       poll.options[optIdx].voters.push(myName);
     }
     S.save('polls',S.polls);
-    // Render ngay lập tức
     document.getElementById('poll-list').innerHTML=Polls.listHTML();
   },
   delete(id){if(confirm('Xóa bình chọn này?')){S.polls=S.polls.filter(p=>p.id!==id);S.save('polls',S.polls);Polls.render();toast('Đã xóa.')}}
@@ -901,7 +870,7 @@ const Polls = {
 const Visions = {
   render(){
     const el=document.getElementById('m-visions');const can=!!S.user;
-    el.innerHTML=`<div class="mh"><div class="mt">Visions</div><div class="mha">${can?`<button class="btn-s" onclick="Visions.toggleAdd()">${S.addPlanOpen?'✕ Hủy':'+ Thêm kế hoạch'}</button>`:''}<button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
+    el.innerHTML=`<div class="mh"><div class="mt">Visions</div><div class="mha">${can?`<button class="btn-s" onclick="Visions.toggleAdd()">${S.addPlanOpen?'✕ Hủy':'+ Thêm'}</button>`:''}<button class="mbtn-x" onclick="App.closeAll()">✕</button></div></div>
     <div class="mb">${!can?`<div class="info-banner"><a onclick="App.open('auth')">Đăng nhập</a> để thêm dự định tương lai</div>`:''}
     <div id="ap-cont">${S.addPlanOpen&&can?this.formHTML():''}</div><div class="ptl">${this.listHTML()}</div></div>`;
   },
@@ -925,14 +894,13 @@ const Visions = {
   },
   listHTML(){
     const sorted=[...S.plans].sort((a,b)=>a.date.localeCompare(b.date));
-    if(!sorted.length)return`<div class="empty-st" style="padding-left:0"><p>Chưa có dự định nào.<br>Hãy thêm kế hoạch đầu tiên!</p></div>`;
+    if(!sorted.length)return`<div class="empty-st" style="padding-left:0"><p>Chưa có dự định nào.</p></div>`;
     
     return sorted.map(p=>{
       const ti=VIS_TYPES.find(t=>t.key===(p.type||'other'))||VIS_TYPES[4];
-      const isPast=new Date(p.date)<new Date(); 
-      const canDel = !!S.user; // Trả quyền xóa tự do
+      const canDel=!!S.user;
       
-      return`<div class="pi"><div class="pdot" style="${isPast?'background:var(--td)':''}"></div><div class="pc2">
+      return`<div class="pi"><div class="pdot" style="${new Date(p.date)<new Date()?'background:var(--td)':''}"></div><div class="pc2">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><span style="font-size:1.3rem">${ti.emoji}</span><span class="p-title" style="margin:0;flex:1;color:var(--txt)">${p.title}</span></div>
         <div class="p-date" style="color:var(--amber); font-weight:600; font-size:0.8rem">${formatDate(new Date(p.date).toISOString()).split(' ')[0]}</div><div class="p-desc">${p.desc}</div>
         <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px"><span class="p-by">Tạo bởi ${p.addedBy}</span>${canDel?`<button onclick="Visions.delete(${p.id})" style="padding:3px 10px;background:transparent;border:1px solid rgba(239,68,68,0.2);border-radius:20px;color:#b91c1c;font-size:.7rem;cursor:pointer;">Xóa</button>`:''}</div>
@@ -952,7 +920,7 @@ const Visions = {
 };
 
 // =====================================================
-// CALENDAR (Đã FIX nút chuyển tháng tròn và có viền)
+// CALENDAR (ĐÃ SỬA LỖI ĐỒNG BỘ HIỂN THỊ LỊCH RẢNH CHUNG)
 // =====================================================
 const Cal = {
   render(){document.getElementById('m-calendar').innerHTML=`<div class="mh"><div class="mt">Lịch trình</div><button class="mbtn-x" onclick="App.closeAll()">✕</button></div><div class="mb">${this.bodyHTML()}</div>`},
@@ -962,34 +930,47 @@ const Cal = {
     let grid=`<div class="cal-grid">`; ['CN','T2','T3','T4','T5','T6','T7'].forEach(d=>grid+=`<div class="cdh">${d}</div>`);
     for(let i=0;i<first;i++) grid+=`<div class="cd empty"></div>`;
     const today=new Date().toISOString().split('T')[0];
-    
     const myNames = getMyNames();
     
-    for(let d=1;d<=count;d++){
+    for(let d=1; d<=count; d++){
       const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
       
-      // Quét tất cả tên của user để xem họ có rảnh ngày này ko
+      // KIỂM TRA TOÀN CỤC: Xem có bất kỳ ai rảnh vào ngày này không
+      let anyoneAv = false;
       let isMyAv = false;
-      if (S.user && S.avail) {
-          myNames.forEach(n => {
-              if (S.avail[n] && S.avail[n][ds]) isMyAv = true;
-          });
+      if (S.avail) {
+        Object.keys(S.avail).forEach(n => {
+          if (S.avail[n] && S.avail[n][ds]) {
+            anyoneAv = true; // Có người rảnh nói chung để hiện chấm
+            if (myNames.includes(n)) isMyAv = true; // Kiểm tra xem có phải mình rảnh không
+          }
+        });
       }
 
-      let cls='cd'; if(ds<today)cls+=' past'; if(ds===today)cls+=' today'; if(isMyAv&&ds>=today)cls+=' my-av'; if(ds===S.selDay)cls+=' selected';
-      grid+=`<div class="${cls}" onclick="Cal.selectDay('${ds}')"><div class="cd-num">${d}</div><div class="cd-dots">${isMyAv&&ds>=today?`<div class="cdd" style="background:var(--p)"></div>`:''}</div></div>`;
+      let cls='cd'; if(ds<today)cls+=' past'; if(ds===today)cls+=' today'; if(anyoneAv&&ds>=today)cls+=' anyone-av'; if(ds===S.selDay)cls+=' selected';
+      
+      // Nếu mình rảnh hiện chấm Tím, người khác rảnh hiện chấm Cam
+      let dotColor = isMyAv ? 'var(--p)' : 'var(--amber)';
+      
+      grid+=`<div class="${cls}" onclick="Cal.selectDay('${ds}')"><div class="cd-num">${d}</div><div class="cd-dots">${anyoneAv&&ds>=today?`<div class="cdd" style="background:${dotColor}"></div>`:''}</div></div>`;
     }
     grid+=`</div>`;
     
-    // Nút check rảnh
+    // Kiểm tra xem chính bạn có báo rảnh ngày được chọn không
     let isSelDayAv = false;
-    if (S.user && S.selDay && S.avail) {
-       myNames.forEach(n => { if (S.avail[n] && S.avail[n][S.selDay]) isSelDayAv = true; });
-    }
+    myNames.forEach(n => { if (S.avail[n] && S.avail[n][S.selDay]) isSelDayAv = true; });
 
-    const detail=S.selDay?`<div class="cal-info"><div class="cal-info-date" style="color:var(--p)">${formatDate(new Date(S.selDay).toISOString()).split(' ')[0]}</div>${S.user&&S.selDay>=today?`<button class="btn-s" onclick="Cal.toggleAv('${S.selDay}')">${isSelDayAv?'✓ Bạn đang rảnh (Nhấn để hủy)':'📍 Báo rảnh hôm nay'}</button>`:'Đăng nhập để đánh dấu rảnh'}</div>`:'<div class="cal-info" style="color:var(--td);text-align:center">Click vào một ngày để xem chi tiết</div>';
+    // LẤY DANH SÁCH TẤT CẢ NHỮNG AI RẢNH NGÀY NÀY ĐỂ HIỂN THỊ CÔNG KHAI
+    let freePeople = [];
+    if (S.selDay && S.avail) {
+      Object.keys(S.avail).forEach(n => {
+        if (S.avail[n] && S.avail[n][S.selDay]) freePeople.push(n);
+      });
+    }
+    let freeListHTML = S.selDay ? `<div style="margin-bottom:15px; font-size:0.85rem; color:var(--tm); text-align:center; background:rgba(0,0,0,0.02); padding:8px; border-radius:8px; border:1px dashed var(--bdr)">👥 Rảnh hôm nay: <strong style="color:var(--p)">${freePeople.length ? freePeople.join(', ') : 'Chưa có ai'}</strong></div>` : '';
+
+    const detail=S.selDay?`<div class="cal-info">${freeListHTML}${S.user&&S.selDay>=today?`<button class="btn-s" onclick="Cal.toggleAv('${S.selDay}')">${isSelDayAv?'✓ Bạn đang rảnh (Nhấn để hủy)':'📍 Báo rảnh hôm nay'}</button>`:'Đăng nhập để đánh dấu rảnh'}</div>`:'<div class="cal-info" style="color:var(--td);text-align:center">Click vào một ngày để xem chi tiết</div>';
     
-    // CSS trực tiếp cho thẻ thanh tiêu đề lịch để chắc chắn không vỡ form
     return `<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <button onclick="Cal.nav(-1)" style="width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--bdr); background: var(--modal-bg); color: var(--tm); font-size: 1.2rem; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.05);" onmouseover="this.style.borderColor='var(--p)'; this.style.color='var(--p)';" onmouseout="this.style.borderColor='var(--bdr)'; this.style.color='var(--tm)';">‹</button>
         <div style="font-size: 1.2rem; font-weight: 700; color: var(--txt);">${mn[m]} năm ${y}</div>
@@ -1001,21 +982,15 @@ const Cal = {
     if(!S.user)return; 
     const myName = getMyName();
     const myNames = getMyNames();
-    
     let isAv = false;
     myNames.forEach(n => { if (S.avail[n] && S.avail[n][ds]) isAv = true; });
 
     if (!isAv) {
-       // Thêm rảnh
        if(!S.avail[myName]) S.avail[myName]={};
        S.avail[myName][ds] = true;
     } else {
-       // Xóa rảnh
-       myNames.forEach(n => {
-           if (S.avail[n] && S.avail[n][ds]) delete S.avail[n][ds];
-       });
+       myNames.forEach(n => { if (S.avail[n] && S.avail[n][ds]) delete S.avail[n][ds]; });
     }
-    
     S.save('avail',S.avail); this.selectDay(ds);
   },
   nav(dir){S.calMonth+=dir;if(S.calMonth>11){S.calMonth=0;S.calYear++}if(S.calMonth<0){S.calMonth=11;S.calYear--}S.selDay=null;document.querySelector('#m-calendar .mb').innerHTML=this.bodyHTML();}
@@ -1034,7 +1009,7 @@ const Profile = {
     const myName = getMyName();
     const ini = getIni(myName);
     const dob = data.dob || '';
-    const spiri = this.calcSpiri(dob);
+    const tuvi = this.calcTuVi(dob);
     
     if(!S.tempBgSet) {
       S.tempBg = data.backgroundType || 'cat';
@@ -1048,14 +1023,12 @@ const Profile = {
       
       <div class="post-box" style="margin-bottom: 30px;">
         <div class="post-box-title">👤 Thông tin cơ bản</div>
-        
         <div class="profile-avi-wrapper">
           <div class="profile-avi" style="background:${data.avatarColor || '#8B5CF6'}" onclick="document.getElementById('avi-upload-input').click()">
             ${aviUrl ? `<img src="${aviUrl}" id="profile-avi-img">` : `<span id="profile-avi-ini">${ini}</span>`}
             <div class="avi-edit-overlay">Đổi ảnh</div>
           </div>
         </div>
-
         <div class="fg"><label class="fl">Tên hiển thị</label><input class="fi" id="p-name" value="${myName||''}" placeholder="Tên của bạn"></div>
         <div class="fg"><label class="fl">Email tài khoản</label><input class="fi" value="${S.user.email}" disabled></div>
         <div class="fg"><label class="fl">Trạng thái tâm trạng</label><input class="fi" id="p-status" value="${data.status||''}" placeholder="Hôm nay bạn thế nào?"></div>
@@ -1065,7 +1038,7 @@ const Profile = {
         </div>
       </div>
 
-      <div class="post-box">
+      <div class="post-box" style="margin-bottom: 30px;">
         <div class="post-box-title">✨ Cài đặt giao diện & Nền</div>
         <label class="fl">Chọn thú cưng làm nền</label>
         <div class="background-picker">
@@ -1082,16 +1055,19 @@ const Profile = {
         </div>
       </div>
 
-      <div style="height:1px; background:rgba(0,0,0,0.05); margin:25px 0"></div>
-
       <div class="spiri-section">
-        <div class="comment-title" style="text-align:center; color:var(--p); margin-bottom:15px">✨ Góc Tâm Linh</div>
+        <div class="comment-title" style="text-align:center; color:var(--p); margin-bottom:15px">🔮 Bản Đồ Lá Số Tử Vi & Chiếu Mệnh</div>
         ${dob ? `
           <div class="spiri-grid">
-            <div class="spiri-item"><div class="spiri-val">${spiri.days}</div><div class="spiri-lbl">Ngày đến Sinh nhật</div></div>
-            <div class="spiri-item"><div class="spiri-val zodiac-emoji">${spiri.zodiac.emoji}</div><div class="spiri-lbl">Cung ${spiri.zodiac.name}</div></div>
+            <div class="spiri-item"><div class="spiri-val" style="font-size:1.3rem">${tuvi.yearStr}</div><div class="spiri-lbl">Can Chi Năm Sinh</div></div>
+            <div class="spiri-item"><div class="spiri-val" style="font-size:1.3rem; color:var(--amber)">${tuvi.mainStar}</div><div class="spiri-lbl">Sao Chủ Mệnh</div></div>
+            <div class="spiri-item"><div class="spiri-val" style="font-size:1.3rem; color:var(--em)">${tuvi.myCung}</div><div class="spiri-lbl">Cung Bản Mệnh</div></div>
+            <div class="spiri-item"><div class="spiri-val" style="font-size:1.3rem; color:var(--rose)">${tuvi.daysLeft} ngày</div><div class="spiri-lbl">Đếm ngược Sinh Nhật</div></div>
           </div>
-        ` : `<div style="color:var(--td); text-align:center; font-size:0.85rem">Hãy nhập ngày sinh ở trên để tính Cung Hoàng Đạo nhé!</div>`}
+          <div style="margin-top:16px; padding:12px; background:rgba(0,0,0,0.02); border:1px dashed var(--bdr); border-radius:12px; font-size:0.88rem; line-height:1.6">
+            <strong style="color:var(--p)">✨ Luận giải chiếu mệnh hôm nay:</strong> ${tuvi.dailyFortune}
+          </div>
+        ` : `<div style="color:var(--td); text-align:center; font-size:0.85rem">Chọn ngày sinh ở trên và lưu lại để lập lá số chiêm tinh.</div>`}
       </div>
 
       <div style="margin-top:30px; display:flex; gap:10px;">
@@ -1100,25 +1076,40 @@ const Profile = {
       </div>
     </div>`;
   },
-  
-  calcSpiri(dobStr) {
-    if(!dobStr) return { days: '?', zodiac: {name:'?', emoji:'❓'} };
-    const b = new Date(dobStr), now = new Date();
-    let nb = new Date(now.getFullYear(), b.getMonth(), b.getDate());
+
+  calcTuVi(dobStr) {
+    if(!dobStr) return null;
+    const d = new Date(dobStr);
+    const y = d.getFullYear(), m = d.getMonth() + 1, day = d.getDate();
+    
+    const cans = ['Giáp', 'Ất', 'Bính', 'Đinh', 'Mậu', 'Kỷ', 'Canh', 'Tân', 'Nhâm', 'Quý'];
+    const chis = ['Tý', 'Sửu', 'Dần', 'Mão', 'Thìn', 'Tỵ', 'Ngọ', 'Mùi', 'Thân', 'Dậu', 'Tuất', 'Hợi'];
+    const yearStr = cans[(y - 4) % 10] + ' ' + chis[(y - 4) % 12];
+
+    const stars = ['Tử Vi Tinh', 'Thiên Phủ Tinh', 'Vũ Khúc Đại Cát', 'Thái Dương Tinh', 'Thất Sát Kiêu Hùng', 'Phá Quân Quyền Biến', 'Tham Lang Tinh', 'Thiên Đồng Thiên Tư', 'Cự Môn Định Tuệ', 'Thiên Lương Hộ Mệnh'];
+    const mainStar = stars[(m + day) % stars.length];
+
+    const cungMend = ['Cung Mệnh', 'Cung Phụ Mẫu', 'Cung Phúc Đức', 'Cung Điền Trạch', 'Cung Quan Lộc', 'Cung Nô Bộc', 'Cung Thiên Di', 'Cung Tật Ách', 'Cung Tài Bạch', 'Cung Tử Tức', 'Cung Phu Thê', 'Cung Huynh Đệ'];
+    const myCung = cungMend[(m * 2 + day) % 12];
+
+    const now = new Date();
+    let nb = new Date(now.getFullYear(), d.getMonth(), d.getDate());
     if (nb < now) nb.setFullYear(now.getFullYear() + 1);
-    const days = Math.ceil((nb - now) / 86400000);
-    const z=[{n:'Ma Kết',e:'♑',m:1,d:20},{n:'Bảo Bình',e:'♒',m:2,d:19},{n:'Song Ngư',e:'♓',m:3,d:20},{n:'Bạch Dương',e:'♈',m:4,d:20},{n:'Kim Ngưu',e:'♉',m:5,d:21},{n:'Song Tử',e:'♊',m:6,d:21},{n:'Cự Giải',e:'♋',m:7,d:23},{n:'Sư Tử',e:'♌',m:8,d:23},{n:'Xử Nữ',e:'♍',m:9,d:23},{n:'Thiên Bình',e:'♎',m:10,d:23},{n:'Bọ Cạp',e:'♏',m:11,d:22},{n:'Nhân Mã',e:'♐',m:12,d:22},{n:'Ma Kết',e:'♑',m:13,d:100}];
-    const zodiac = z.find(x => (b.getMonth()+1 < x.m) || (b.getMonth()+1 === x.m && b.getDate() <= x.d)) || z[0];
-    return { days: days===365?'Hôm nay!':days, zodiac:{name:zodiac.n, emoji:zodiac.e} };
+    const daysLeft = Math.ceil((nb - now) / 86400000);
+
+    const hash = (y + m + day + now.getDate()) % 5;
+    const fortunes = [
+      "Hôm nay cát tinh cao chiếu, tài lộc han thông, năng lượng sáng tạo đạt đỉnh giúp xử lý tốt mọi việc tích tụ.",
+      "Quý nhân ẩn danh xuất hiện nâng đỡ, học tập và các dự định cá nhân có bước tiến triển vượt bậc ngoài mong đợi.",
+      "Đào hoa tinh quy tụ chiếu sáng cung mệnh, các mối quan hệ bạn bè tình cảm xung quanh vô cùng khăng khít, thấu hiểu.",
+      "Sao chủ quản mang lại nguồn trực giác nhạy bén, thích hợp để tập trung học sâu kiến thức mới hoặc lên kế hoạch lớn.",
+      "Vận trình ngày hôm nay an lành, ôn hòa. Khuyên bản mệnh nên dành thời gian nghỉ ngơi, chăm sóc nội tâm và nuông chiều bản thân."
+    ];
+    return { yearStr, mainStar, myCung, daysLeft: daysLeft === 365 ? 'Hôm nay!' : daysLeft, dailyFortune: fortunes[hash] };
   },
 
-  closeModal() {
-    S.tempBgSet = false;
-    App.closeAll();
-  },
-
+  closeModal() { S.tempBgSet = false; App.closeAll(); },
   setColor(el, c){ document.querySelectorAll('#m-profile .color-dot').forEach(d=>d.classList.remove('active')); el.classList.add('active'); S.selColor = c; },
-  
   setTempBg(event, type) {
     S.tempBg = type;
     document.querySelectorAll('#m-profile .bg-option').forEach(opt => opt.classList.remove('active'));
@@ -1126,8 +1117,7 @@ const Profile = {
   },
 
   handleAviUpload(event) {
-    const file = event.target.files[0];
-    if (!file) return;
+    const file = event.target.files[0]; if (!file) return;
     if (file.size > 5 * 1024 * 1024) { toast('Ảnh quá lớn! Tối đa 5MB. ❌'); event.target.value = ''; return; }
     toast('Đang tải ảnh lên... ⏳');
     const reader = new FileReader();
@@ -1160,9 +1150,7 @@ const Profile = {
     const bg = S.tempBg || S.userFullData?.backgroundType || 'cat';
 
     if(!name) { toast('Vui lòng không để trống tên ❌'); return; }
-
     toast('Đang lưu... ⏳');
-    
     fbAuth.currentUser.updateProfile({ displayName: name });
 
     fbDB.ref('data/users/'+S.user.uid).update({ 
@@ -1175,9 +1163,7 @@ const Profile = {
     })
     .then(()=>{ 
       toast('Đã cập nhật hồ sơ và giao diện! ✨'); 
-      S.tempBgSet = false; 
-      S.tempAviUrl = null;
-      App.closeAll(); 
+      S.tempBgSet = false; S.tempAviUrl = null; App.closeAll(); 
     });
   }
 };
